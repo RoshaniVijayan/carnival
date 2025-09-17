@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Books & Movies - Halloween Carnival Banasthali</title>
+  <style>
+    body { margin:0; font-family:"Trebuchet MS", sans-serif; background:#0d0d0d; color:#f8f8f8; }
+    header { background:#111; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; }
+    header h1 { margin:0; color:#ff6a00; font-size:1.2rem; }
+    nav a { color:#fff; text-decoration:none; margin-left:1rem; font-weight:bold; }
+    .container { max-width:1000px; margin:2rem auto; padding:0 1rem; }
+    .grid { display:grid; grid-template-columns:1fr 320px; gap:1rem; }
+    .list { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a00aa; }
+    .book { border-bottom:1px solid #2a2a2a; padding:0.8rem 0; }
+    .book:last-child { border-bottom:none; }
+    .book h3 { margin:0; color:#ff6a00; }
+    .movie { margin-bottom:1rem; padding:0.6rem; background:#111; border-radius:6px; }
+    .sidebar { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a0066; }
+    footer { text-align:center; padding:1rem; background:#0b0b0b; color:rgb(255,0,0); margin-top:2rem; }
+    .btn { background:#ff6a00; color:#111; padding:0.5rem 0.8rem; border-radius:6px; text-decoration:none; font-weight:bold; display:inline-block; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎃 Banasthali Carnival — Books & Movies</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="tickets.html">Tickets</a>
+      <a href="book-movie.html">Books & Movies</a>
+      <a href="merch.html">Merch</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div style="text-align:left; color:#ff6a00; margin-bottom:0.8rem;"><h2>Classic Horror Books & Festival Movie Screenings</h2></div>
+
+    <div class="grid">
+      <div class="list" aria-label="books list">
+        <h3 style="color:#ff6a00;">Featured Book Fair</h3>
+
+        <div class="book">
+          <h3>Collected Gothic Tales</h3>
+          <p class="small">Curated selection of gothic short stories. Stall: A3.</p>
+          <a class="btn" href="#">Reserve Copy</a>
+        </div>
+
+        <div class="book">
+          <h3>Horror Classics: Dracula & More</h3>
+          <p class="small">New editions and local translations available. Stall: B1.</p>
+          <a class="btn" href="#">Reserve Copy</a>
+        </div>
+
+        <div class="book">
+          <h3>Local Authors — Spooky Shortlists</h3>
+          <p class="small">Meet-and-greet at 7 PM on 29 Oct (costume recommended).</p>
+          <a class="btn" href="#">Book Seat</a>
+        </div>
+      </div>
+
+      <aside class="sidebar" aria-label="movie schedule">
+        <h3 style="color:#ff6a00;">Outdoor Movie Nights</h3>
+
+        <div class="movie">
+          <strong>30 Oct — Dracula</strong>
+          <p class="small">Screening starts at 8 PM. Free seating; blankets suggested.</p>
+        </div>
+
+        <div class="movie">
+          <strong>31 Oct — Classic Horror Short Films</strong>
+          <p class="small">Short film block at 9 PM. Family friendly block early evening.</p>
+        </div>
+
+        <div class="movie">
+          <strong>1 Nov — Festival Wrap: Horror Anthology</strong>
+          <p class="small">Highlights and audience vote for favourite short.</p>
+        </div>
+
+        <div style="margin-top:1rem;">
+          <a class="btn" href="tickets.html">Book Movie Seat</a>
+        </div>
+      </aside>
+    </div>
+
+    <section style="margin-top:1rem;" class="list">
+      <h3 style="color:#ff6a00;">Vendor Info (For book sellers)</h3>
+      <p class="small">Stall booking is managed by the carnival committee. Vendors should bring their own tables and lighting. Contact: books@banasthali-carnival.example (replace with real contact when available).</p>
+    </section>
+  </div>
+
+  <footer>&copy; 2025 Banasthali Halloween Carnival | All Rights Reserved</footer>
+</body>
+</html>

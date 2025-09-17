@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Tickets - Halloween Carnival Banasthali</title>
+  <style>
+    body { margin:0; font-family:"Trebuchet MS", sans-serif; background:#0d0d0d; color:#f8f8f8; }
+    header { background:#111; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 10px #000; }
+    header h1 { margin:0; color:#ff6a00; font-size:1.3rem; }
+    nav a { color:#fff; text-decoration:none; margin-left:1rem; font-weight:bold; }
+    nav a:hover { color:#ff6a00; }
+    .hero { height:320px; background-image:url('hauntedhouse.jpeg'); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; position:relative; }
+    .hero::after { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+    .hero .title { position:relative; z-index:1; text-align:center; }
+    .hero h2 { margin:0; color:#ff6a00; font-size:2rem; text-shadow:2px 2px 8px #000; }
+    main { padding:2rem; max-width:1000px; margin: auto; }
+    .ticket-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-top:1.2rem; }
+    .ticket { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a00aa; }
+    .ticket h3 { margin-top:0; color:#ff6a00; }
+    .ticket p { margin:0.5rem 0 1rem 0; }
+    .price { font-size:1.4rem; font-weight:bold; color:#fff; }
+    .buy { display:inline-block; margin-top:0.8rem; padding:0.6rem 1rem; border-radius:6px; text-decoration:none; background:#ff6a00; color:#111; font-weight:bold; }
+    .info { background:#1a1a1a; padding:1rem; border-radius:8px; margin-top:1rem; box-shadow:0 0 12px #ff6a0066; }
+    footer { text-align:center; padding:1rem; background:#0b0b0b; color:rgb(255,0,0); margin-top:2rem; }
+    form label { display:block; margin:0.6rem 0 0.2rem 0; }
+    form input, form select { width:100%; padding:0.6rem; border-radius:6px; border:1px solid #333; background:#0f0f0f; color:#fff; }
+    .small { font-size:0.9rem; color:#ddd; margin-top:0.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎃 Banasthali Halloween Carnival</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="tickets.html">Tickets</a>
+      <a href="book-movie.html">Books & Movies</a>
+      <a href="merch.html">Merch</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="title">
+      <h2>Tickets & Passes</h2>
+      <p class="small">Choose your pass, then complete booking below.</p>
+    </div>
+  </div>
+
+  <main>
+    <section>
+      <h2 style="color:#ff6a00; text-align:left;">Available Tickets</h2>
+      <div class="ticket-grid">
+        <div class="ticket">
+          <h3>General Entry (Evening)</h3>
+          <p>Access to carnival grounds and daytime family events. Valid 6 PM – 9 PM.</p>
+          <div class="price">Free</div>
+          <div class="small">Rides charged separately.</div>
+        </div>
+
+        <div class="ticket">
+          <h3>Ride Pass (5 Rides)</h3>
+          <p>Use on Ferris Wheel, Haunted Train, Ghost Train & selected rides.</p>
+          <div class="price">₹150</div>
+          <a class="buy" href="#book">Buy Now</a>
+        </div>
+
+        <div class="ticket">
+          <h3>After-8 PM Scare Pass</h3>
+          <p>Access to scarier events (18+ recommended). Valid after 8 PM.</p>
+          <div class="price">₹250</div>
+          <a class="buy" href="#book">Buy Now</a>
+        </div>
+
+        <div class="ticket">
+          <h3>Family Pack (2 Adults + 2 Kids)</h3>
+          <p>Includes family entry + 6 ride credits shared across family.</p>
+          <div class="price">₹499</div>
+          <a class="buy" href="#book">Buy Now</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="info" id="book" aria-label="ticket booking">
+      <h2 style="color:#ff6a00;">Book Tickets</h2>
+      <p class="small">Fill the form and a confirmation will be sent to the email you provide. (This is a static page — integrate with your payment/booking backend later.)</p>
+
+      <form onsubmit="alert('Demo: form submitted. Integrate backend to process payment.'); return false;">
+        <label for="name">Full name</label>
+        <input id="name" required />
+
+        <label for="email">Email</label>
+        <input id="email" type="email" required />
+
+        <label for="ticket-type">Ticket Type</label>
+        <select id="ticket-type" required>
+          <option value="">-- select --</option>
+          <option>Ride Pass (5 Rides) - ₹150</option>
+          <option>After-8 PM Scare Pass - ₹250</option>
+          <option>Family Pack - ₹499</option>
+        </select>
+
+        <label for="qty">Quantity</label>
+        <input id="qty" type="number" min="1" value="1" />
+
+        <div style="margin-top:0.8rem;">
+          <button class="buy" type="submit">Proceed to Pay</button>
+        </div>
+      </form>
+
+      <p class="small">Payment note: For live site, connect this form to a payment gateway and ticketing system. For now, this page is ready to submit to your backend.</p>
+    </section>
+
+    <section class="info">
+      <h2 style="color:#ff6a00;">Ticketing Rules</h2>
+      <ul style="line-height:1.6;">
+        <li>Keep proof of purchase for entry.</li>
+        <li>No refunds for weather-cancelled rides; reschedule credits may be issued.</li>
+        <li>IDs may be required for After-8 PM Scare Pass.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>&copy; 2025 Banasthali Halloween Carnival | All Rights Reserved</footer>
+</body>
+</html>

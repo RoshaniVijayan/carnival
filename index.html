@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<head>
+  <title>Halloween Carnival Banasthali</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", sans-serif;
+      background-color: #0d0d0d;
+      color: #f8f8f8;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ff6a00;
+    }
+
+    nav a:hover {
+      color: #ff6a00;
+    }
+
+    /* Fullscreen Carousel */
+    .carousel {
+      width: 100%;
+      height: 100vh; /* takes up full screen height */
+    }
+
+    .carousel img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: fadeBlur 18s infinite;
+    }
+
+    /* First image */
+    .carousel img:nth-child(1) {
+      animation-delay: 0s;
+    }
+    /* Second image */
+    .carousel img:nth-child(2) {
+      animation-delay: 6s;
+    }
+
+    /* Third image */
+    .carousel img:nth-child(3) {
+      animation-delay: 12s;
+    }
+
+    @keyframes fadeBlur {
+      0% { opacity: 0; filter: blur(5px); }
+      5% { opacity: 1; filter: blur(0); }
+      10% { opacity: 0.8; filter: blur(2px); }
+      15% { opacity: 1; filter: blur(0); }
+      30% { opacity: 1; filter: blur(0); }
+      33% { opacity: 0; filter: blur(5px); }
+      100% { opacity: 0; filter: blur(5px); }
+    }
+
+    /* Ellipse overlay in the center */
+    .ellipse-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2rem 3rem;
+      border-radius: 35%;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px #ff6a00bc;
+    }
+
+    .ellipse-overlay h1 {
+      margin: 0 0 1rem;
+      font-size: 2.2rem;
+      color: #ff6a00;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    .ellipse-overlay nav a {
+      display: inline-block;
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .ellipse-overlay nav a:hover {
+      color: #ff6a00;
+    }
+
+    section {
+      padding: 3rem 2rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #ff6a00;
+    }
+
+    .schedule, .info {
+      max-width: 900px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ff6a00bc;
+    }
+
+    .schedule table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .schedule th, .schedule td {
+      padding: 0.8rem;
+      border: 1px solid #444;
+      text-align: center;
+    }
+
+    .schedule th {
+      background: #ff6a00;
+    }
+
+    footer {
+      background: #111;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Scroll down hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 1rem;
+      animation: fadePulse 2s infinite;
+      cursor: pointer;
+    }
+
+    .scroll-hint span {
+      display: block;
+      font-size: 1.5rem;
+      margin-top: 5px;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes fadePulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    footer {
+      color: rgb(255, 0, 0);
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Fullscreen Carousel -->
+  <div class="carousel">
+    <img src="ghosts3.png" alt="Haunted House 1">
+    <img src="hauntedhouse.jpeg" alt="Haunted House 2">
+    <img src="grave3.jpeg" alt="Haunted House 3">
+
+
+    <!-- Centered Overlay Ellipse -->
+    <div class="ellipse-overlay">
+      <h1>🎃 Haunted Halloween Carnival 🎃</h1>
+      <nav>
+        <a href="tickets.html">Tickets</a>
+        <a href="book-movie.html">Books & Movies</a>
+        <a href="merch.html">Merch</a>
+      </nav>
+    </div>
+
+    <!-- Scroll Down Hint -->
+    <div class="scroll-hint">
+        <p>Scroll for more!</p>
+        <span>⬇</span>
+    </div>
+  </div>
+
+  <!-- Schedule Section -->
+  <section>
+    <h2>Event Schedule (27th Oct - 1st Nov)</h2>
+    <div class="schedule">
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Opening Hours</th>
+          <th>Main Events</th>
+        </tr>
+        <tr>
+          <td>27 Oct</td>
+          <td>6 PM – 11 PM</td>
+          <td>Opening Parade, Haunted House Tour</td>
+        </tr>
+        <tr>
+          <td>28 Oct</td>
+          <td>6 PM – 11 PM</td>
+          <td>Spooky Ferris Wheel & Rides, Live Horror Music</td>
+        </tr>
+        <tr>
+          <td>29 Oct</td>
+          <td>6 PM – 11 PM</td>
+          <td>Classic Horror Book Fair, Costume Contest</td>
+        </tr>
+        <tr>
+          <td>30 Oct</td>
+          <td>6 PM – Midnight</td>
+          <td>Outdoor Movie Night: Dracula</td>
+        </tr>
+        <tr>
+          <td>31 Oct (Halloween)</td>
+          <td>6 PM – 1 AM</td>
+          <td>Grand Trick-or-Treat Parade, Fireworks</td>
+        </tr>
+        <tr>
+          <td>1 Nov</td>
+          <td>6 PM – 10 PM</td>
+          <td>Closing Ceremony, Ghost Train Ride</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- Info Section -->
+  <section>
+    <h2>Visitor Information</h2>
+    <div class="info">
+      <p><strong>Location:</strong> Laxmibai Maidan, Banasthali University</p>
+      <p><strong>Entry Fee:</strong> Free entry, rides and events ticketed separately</p>
+      <p><strong>Parking:</strong> Free parking available for faculty members</p>
+      <p><strong>Safety:</strong> Costumes encouraged, but masks must be removable for security checks</p>
+      <p><strong>Note:</strong> Family-friendly during the day, scarier events after 8 PM</p>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Banasthali Halloween Carnival | All Rights Reserved
+  </footer>
+</body>
+</html>
