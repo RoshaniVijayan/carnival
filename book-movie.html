@@ -38,6 +38,9 @@
       .sidebar { order:2; }
     }
   </style>
+
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <header>
@@ -339,7 +342,127 @@
   function isValidEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
   function isValidPhone(phone){ const digits = phone.replace(/\D/g,''); return digits.length >= 7; }
 
-  modalForm.addEventListener('submit', function(e){
+  // Helper: generate & download PDF ticket (uses jsPDF)
+  async function generateAndDownloadPDF(payload, qrDataUrl) {
+    try {
+      // ensure jsPDF loaded
+      if (!window.jspdf) {
+        // try to wait briefly
+        await new Promise((res) => setTimeout(res, 250));
+        if (!window.jspdf) {
+          console.warn('jsPDF not available — skipping PDF generation');
+          return false;
+        }
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+      // Layout constants
+      const left = 36;
+      let y = 40;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const ticketW = pageWidth - left * 2;
+
+      // Header
+      doc.setFillColor(16,16,16);
+      doc.rect(left, y-8, ticketW, 70, 'F'); // header background
+      doc.setFontSize(20);
+      doc.setTextColor(255,106,0);
+      doc.text('Banasthali Halloween Carnival', left + 12, y + 10);
+      doc.setFontSize(10);
+      doc.setTextColor(200,200,200);
+      doc.text('Books & Movies — Official Ticket', left + 12, y + 30);
+      doc.setTextColor(255,255,255);
+      y += 72;
+
+      // Ticket box
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.6);
+      doc.roundedRect(left, y, ticketW, 320, 6, 6);
+      const pad = 14;
+      let cx = left + pad;
+      let cy = y + pad;
+
+      // Left column: details
+      doc.setFontSize(12);
+      doc.setTextColor(34,34,34);
+      doc.text('Order ID:', cx, cy + 2);
+      doc.setFontSize(14);
+      doc.setTextColor(0);
+      doc.text(String(payload.orderId), cx + 80, cy + 2);
+
+      cy += 24;
+      doc.setFontSize(11);
+      doc.setTextColor(0);
+      doc.text('Item:', cx, cy);
+      doc.setFontSize(13);
+      doc.setTextColor(0);
+      doc.text(String(payload.itemTitle), cx + 80, cy);
+
+      cy += 20;
+      doc.setFontSize(11);
+      doc.text('Quantity / Seats:', cx, cy);
+      doc.setFontSize(13);
+      doc.text(String(payload.quantity), cx + 120, cy);
+
+      cy += 22;
+      doc.setFontSize(11);
+      doc.text('Name:', cx, cy);
+      doc.setFontSize(12);
+      doc.text(String(payload.name), cx + 80, cy);
+
+      cy += 18;
+      doc.setFontSize(11);
+      doc.text('Email:', cx, cy);
+      doc.setFontSize(12);
+      doc.text(String(payload.email), cx + 80, cy);
+
+      cy += 18;
+      doc.setFontSize(11);
+      doc.text('Phone:', cx, cy);
+      doc.setFontSize(12);
+      doc.text(String(payload.phone), cx + 80, cy);
+
+      cy += 30;
+      doc.setFontSize(10);
+      doc.setTextColor(120,120,120);
+      doc.text('Issued:', cx, cy);
+      doc.setFontSize(11);
+      doc.setTextColor(0);
+      doc.text(new Date(payload.issuedAt).toLocaleString(), cx + 56, cy);
+
+      // Right column: QR
+      const qrX = left + ticketW - pad - 160;
+      const qrY = y + pad;
+      if (qrDataUrl) {
+        try {
+          doc.addImage(qrDataUrl, 'PNG', qrX, qrY, 140, 140);
+        } catch (e) {
+          console.warn('Failed to embed QR in PDF', e);
+        }
+      } else {
+        doc.setFontSize(10);
+        doc.setTextColor(150,0,0);
+        doc.text('QR unavailable', qrX + 18, qrY + 80);
+      }
+
+      // Footer note and barcode-like line
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text('Present this ticket (printed or digital) at the collection point. Staff will scan the QR to validate.', left + 12, y + 280);
+
+      // Save file
+      const filename = `ticket-${String(payload.orderId).replace(/[^a-zA-Z0-9-_]/g,'')}.pdf`;
+      doc.save(filename);
+      return true;
+    } catch (err) {
+      console.error('PDF generation error', err);
+      return false;
+    }
+  }
+
+  // Main modal submit handler — now async so it can generate+download PDF before opening confirmation
+  modalForm.addEventListener('submit', async function(e){
     e.preventDefault();
     modalError.style.display = 'none';
 
@@ -379,7 +502,6 @@
     }
     const extraLabelText = (action === 'reserve') ? 'Copies' : 'Seats';
 
-    // QR payload: small JSON with booking data
     const qrPayload = {
       orderId: orderId,
       action: action,
@@ -401,7 +523,16 @@
       qrDataUrl = '';
     }
 
-    // Confirmation page HTML with embedded QR image (data URL)
+    // Generate & download PDF ticket (automatically)
+    try {
+      await generateAndDownloadPDF(qrPayload, qrDataUrl);
+    } catch (err) {
+      console.warn('PDF download attempt failed:', err);
+    }
+
+    // Build confirmation HTML (with embedded QR and a Download button)
+    // To keep the confirmation page self-contained we embed the QR via encodeURIComponent
+    const encodedQR = encodeURIComponent(qrDataUrl || '');
     const confirmationHtml = `
 <!doctype html>
 <html>
@@ -466,7 +597,7 @@
 
       <div class="qr-wrap" aria-hidden="${qrDataUrl ? 'false' : 'true'}">
         <div class="label">Scan to verify</div>
-        ${ qrDataUrl ? `<img src="${qrDataUrl}" alt="Booking QR code">` : '<div style="color:#a00; margin-top:10px;">QR generation failed</div>' }
+        ${ qrDataUrl ? `<img id="confirmQr" src="${qrDataUrl}" alt="Booking QR code">` : '<div style="color:#a00; margin-top:10px;">QR generation failed</div>' }
       </div>
     </div>
 
@@ -476,14 +607,113 @@
     </div>
 
     <div class="actions">
-      <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+      <button id="downloadBtn" class="btn">Download Ticket (PDF)</button>
+      <button class="btn secondary" onclick="window.print()">Print / Save as PDF</button>
       <button class="btn secondary" onclick="window.close()">Close</button>
     </div>
   </div>
+
+  <script>
+    // recreate qrDataUrl inside confirmation window
+    const qrDataUrl = decodeURIComponent("${encodeURIComponent(qrDataUrl || '')}");
+    const payload = ${JSON.stringify(qrPayload)};
+    async function downloadTicket() {
+      try {
+        if (!window.jspdf) {
+          // load jsPDF dynamically if not present
+          const s = document.createElement('script');
+          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+          document.head.appendChild(s);
+          await new Promise((res)=>{ s.onload = res; s.onerror = res; });
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const left = 36;
+        let y = 40;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const ticketW = pageWidth - left * 2;
+
+        doc.setFillColor(16,16,16);
+        doc.rect(left, y-8, ticketW, 70, 'F');
+        doc.setFontSize(20);
+        doc.setTextColor(255,106,0);
+        doc.text('Banasthali Halloween Carnival', left + 12, y + 10);
+        doc.setFontSize(10);
+        doc.setTextColor(200,200,200);
+        doc.text('Books & Movies — Official Ticket', left + 12, y + 30);
+        y += 72;
+
+        doc.roundedRect(left, y, ticketW, 320, 6, 6);
+        const pad = 14;
+        let cx = left + pad;
+        let cy = y + pad;
+
+        doc.setFontSize(12);
+        doc.setTextColor(34,34,34);
+        doc.text('Order ID:', cx, cy + 2);
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text(String(payload.orderId), cx + 80, cy + 2);
+
+        cy += 24;
+        doc.setFontSize(11);
+        doc.setTextColor(0);
+        doc.text('Item:', cx, cy);
+        doc.setFontSize(13);
+        doc.setTextColor(0);
+        doc.text(String(payload.itemTitle), cx + 80, cy);
+
+        cy += 20;
+        doc.setFontSize(11);
+        doc.text('Quantity / Seats:', cx, cy);
+        doc.setFontSize(13);
+        doc.text(String(payload.quantity), cx + 120, cy);
+
+        cy += 22;
+        doc.setFontSize(11);
+        doc.text('Name:', cx, cy);
+        doc.setFontSize(12);
+        doc.text(String(payload.name), cx + 80, cy);
+
+        cy += 18;
+        doc.setFontSize(11);
+        doc.text('Email:', cx, cy);
+        doc.setFontSize(12);
+        doc.text(String(payload.email), cx + 80, cy);
+
+        cy += 18;
+        doc.setFontSize(11);
+        doc.text('Phone:', cx, cy);
+        doc.setFontSize(12);
+        doc.text(String(payload.phone), cx + 80, cy);
+
+        const qrX = left + ticketW - pad - 160;
+        const qrY = y + pad;
+        if (qrDataUrl) {
+          try { doc.addImage(qrDataUrl, 'PNG', qrX, qrY, 140, 140); } catch(e){ console.warn('embed QR failed', e); }
+        }
+
+        doc.setFontSize(9);
+        doc.setTextColor(120);
+        doc.text('Present this ticket (printed or digital) at the collection point. Staff will scan the QR to validate.', left + 12, y + 280);
+
+        const filename = `ticket-${String(payload.orderId).replace(/[^a-zA-Z0-9-_]/g,'')}.pdf`;
+        doc.save(filename);
+      } catch (err) {
+        console.error('Download failed', err);
+        alert('Unable to generate PDF in this browser.');
+      }
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', downloadTicket);
+    // If automatic download already happened, this still provides a manual download option
+  </script>
+
 </body>
 </html>
     `.trim();
 
+    // open confirmation page
     const w = window.open('', '_blank', 'noopener,noreferrer');
     if (!w) {
       alert('Popup blocked. Please allow popups to see the confirmation page.');
@@ -493,6 +723,7 @@
     w.document.write(confirmationHtml);
     w.document.close();
 
+    // close modal
     closeModal();
   });
 
