@@ -1,124 +1,733 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>Tickets - Halloween Carnival Banasthali</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { margin:0; font-family:"Trebuchet MS", sans-serif; background:#0d0d0d; color:#f8f8f8; }
-    header { background:#111; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 10px #000; }
-    header h1 { margin:0; color:#ff6a00; font-size:1.3rem; }
-    nav a { color:#fff; text-decoration:none; margin-left:1rem; font-weight:bold; }
-    nav a:hover { color:#ff6a00; }
-    .hero { height:320px; background-image:url('hauntedhouse.jpeg'); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; position:relative; }
-    .hero::after { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.45); }
-    .hero .title { position:relative; z-index:1; text-align:center; }
-    .hero h2 { margin:0; color:#ff6a00; font-size:2rem; text-shadow:2px 2px 8px #000; }
-    main { padding:2rem; max-width:1000px; margin: auto; }
-    .ticket-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-top:1.2rem; }
-    .ticket { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a00aa; }
-    .ticket h3 { margin-top:0; color:#ff6a00; }
-    .ticket p { margin:0.5rem 0 1rem 0; }
-    .price { font-size:1.4rem; font-weight:bold; color:#fff; }
-    .buy { display:inline-block; margin-top:0.8rem; padding:0.6rem 1rem; border-radius:6px; text-decoration:none; background:#ff6a00; color:#111; font-weight:bold; }
-    .info { background:#1a1a1a; padding:1rem; border-radius:8px; margin-top:1rem; box-shadow:0 0 12px #ff6a0066; }
-    footer { text-align:center; padding:1rem; background:#0b0b0b; color:rgb(255,0,0); margin-top:2rem; }
-    form label { display:block; margin:0.6rem 0 0.2rem 0; }
-    form input, form select { width:100%; padding:0.6rem; border-radius:6px; border:1px solid #333; background:#0f0f0f; color:#fff; }
-    .small { font-size:0.9rem; color:#ddd; margin-top:0.5rem; }
+    /* Page base */
+    :root{
+      --bg:#0d0d0d;
+      --card:#151515;
+      --panel:#1a1a1a;
+      --accent:#ff6a00;
+      --muted:#bfbfbf;
+    }
+    body { margin:0; font-family: "Trebuchet MS", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:#f8f8f8; }
+    header { background:#111; padding:14px 18px; display:flex; gap:12px; align-items:center; justify-content:space-between; box-shadow:0 2px 10px rgba(0,0,0,0.6); }
+    header h1 { margin:0; color:var(--accent); font-size:1.1rem; letter-spacing:0.2px; }
+    nav a { color:#fff; text-decoration:none; margin-left:10px; font-weight:700; font-size:0.95rem; }
+    nav a:hover { color:var(--accent); }
+    .hero { height:160px; background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url('hauntedhouse.jpeg'); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+    .hero h2 { margin:0; color:var(--accent); font-size:1.6rem; text-shadow:0 4px 16px rgba(0,0,0,0.6); }
+
+    main { max-width:980px; margin: 0 auto 48px; padding:0 16px; box-sizing:border-box; }
+
+    /* Two-column page layout */
+    .layout { display:grid; grid-template-columns: 1fr 380px; gap:16px; align-items:start; }
+    @media (max-width:880px){ .layout { grid-template-columns:1fr; } .hero { height:120px; } }
+
+    .panel { background:var(--panel); padding:14px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.6); }
+
+    /* Tickets list: denser, compact cards in two rows */
+    .tickets-grid {
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+      align-items:stretch;
+    }
+    @media (max-width:740px){ .tickets-grid { grid-template-columns:1fr; } }
+
+    .ticket-card {
+      background:var(--card);
+      padding:10px;
+      border-radius:10px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      transition:transform .12s ease, box-shadow .12s ease;
+      cursor:default;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .ticket-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,0.6); }
+
+    .tc-icon{
+      width:56px; height:56px; flex:0 0 56px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      display:flex; align-items:center; justify-content:center; font-size:28px;
+      color:var(--accent); border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .tc-body { flex:1 1 auto; display:flex; flex-direction:column; gap:6px; }
+    .tc-title { font-weight:800; color:var(--accent); font-size:0.98rem; display:flex; align-items:center; gap:8px; }
+    .tc-desc { color:var(--muted); font-size:0.92rem; line-height:1.2; }
+    .tc-price { font-weight:800; color:#fff; font-size:0.95rem; margin-left:auto; }
+
+    /* compact controls & form */
+    form label { display:block; margin:8px 0 6px 0; font-weight:700; font-size:0.92rem; color:#fff; }
+    input, select { width:100%; padding:8px 10px; border-radius:8px; border:1px solid #333; background:#0f0f0f; color:#fff; box-sizing:border-box; }
+    .pay-methods { display:flex; gap:14px; margin-top:8px; flex-wrap:wrap; }
+    .pay-methods label { display:flex; gap:8px; align-items:center; cursor:pointer; color:var(--muted); font-weight:700; }
+    .actions { margin-top:12px; display:flex; gap:10px; align-items:center; }
+    .btn { background:var(--accent); color:#111; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:800; }
+    .btn.secondary { background:#222; color:#fff; border:1px solid #333; }
+
+    .summary { margin-top:12px; padding:10px; background:#0f0f0f; border-radius:8px; color:var(--muted); font-size:0.95rem; }
+    .muted { color:var(--muted); }
+
+    /* Payment area */
+    #paypalArea { margin-top:8px; }
+    #paypal-container { margin-top:6px; }
+
+    /* small helper for dues preview */
+    .dues-preview { display:inline-block; padding:6px 8px; border-radius:6px; background:#3b0b0b; color:#ffb3b3; font-weight:800; margin-left:8px; font-size:0.82rem; }
+
+    /* print ticket styling (in new window) left as-is in JS */
+
   </style>
 </head>
 <body>
   <header>
-    <h1>🎃 Banasthali Halloween Carnival</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="tickets.html">Tickets</a>
-      <a href="book-movie.html">Books & Movies</a>
-      <a href="merch.html">Merch</a>
-    </nav>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <h1>🎃 Banasthali Halloween Carnival</h1>
+      <nav aria-label="main-nav">
+        <a href="index.html">Home</a>
+        <a href="tickets.html">Tickets</a>
+        <a href="book-movie.html">Books & Movies</a>
+        <a href="merch.html">Merch</a>
+      </nav>
+    </div>
+    <div style="color:var(--muted); font-size:0.92rem;">Secure payments via PayPal (sandbox) — or pay Cash at Counter</div>
   </header>
 
-  <div class="hero">
-    <div class="title">
-      <h2>Tickets & Passes</h2>
-      <p class="small">Choose your pass, then complete booking below.</p>
-    </div>
+  <div class="hero" role="img" aria-label="Haunted House">
+    <h2>Tickets & Passes</h2>
   </div>
 
   <main>
-    <section>
-      <h2 style="color:#ff6a00; text-align:left;">Available Tickets</h2>
-      <div class="ticket-grid">
-        <div class="ticket">
-          <h3>General Entry (Evening)</h3>
-          <p>Access to carnival grounds and daytime family events. Valid 6 PM – 9 PM.</p>
-          <div class="price">Free</div>
-          <div class="small">Rides charged separately.</div>
+    <div class="layout">
+      <!-- Left column: tickets list and booking form -->
+      <div>
+        <div class="panel" aria-labelledby="availableTicketsTitle">
+          <h3 id="availableTicketsTitle" style="color:var(--accent); margin:0 0 10px 0; font-size:1.05rem;">Available Tickets</h3>
+
+          <div class="tickets-grid" id="ticketsList">
+            <!-- Card 1: General -->
+            <div class="ticket-card" data-ticket="general" title="General Entry">
+              <div class="tc-icon">🎟️</div>
+              <div class="tc-body">
+                <div style="display:flex; align-items:center;">
+                  <div class="tc-title">General Entry (Evening)</div>
+                  <div class="tc-price">Free</div>
+                </div>
+                <div class="tc-desc">Access to grounds. 6 PM - 9 PM</div>
+              </div>
+            </div>
+
+            <!-- Card 2: Ride pass -->
+            <div class="ticket-card" data-ticket="ride5" title="Ride Pass">
+              <div class="tc-icon">🎠</div>
+              <div class="tc-body">
+                <div style="display:flex; align-items:center;">
+                  <div class="tc-title">Ride Pass (5 Rides)</div>
+                  <div class="tc-price">₹150</div>
+                </div>
+                <div class="tc-desc">Valid for 5 rides</div>
+              </div>
+            </div>
+
+            <!-- Card 3: After-8 -->
+            <div class="ticket-card" data-ticket="after8" title="After-8 Scare Pass">
+              <div class="tc-icon">🌙</div>
+              <div class="tc-body">
+                <div style="display:flex; align-items:center;">
+                  <div class="tc-title">After-8 PM Scare Pass (18+)</div>
+                  <div class="tc-price">₹250</div>
+                </div>
+                <div class="tc-desc">After 8 PM access (18+ recommended)</div>
+              </div>
+            </div>
+
+            <!-- Card 4: Family -->
+            <div class="ticket-card" data-ticket="family" title="Family Pack">
+              <div class="tc-icon">👨‍👩‍👧‍👦</div>
+              <div class="tc-body">
+                <div style="display:flex; align-items:center;">
+                  <div class="tc-title">Family Pack (2 Adults + 2 Kids)</div>
+                  <div class="tc-price">₹499</div>
+                </div>
+                <div class="tc-desc">2 adults + 2 kids + 6 ride credits</div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="ticket">
-          <h3>Ride Pass (5 Rides)</h3>
-          <p>Use on Ferris Wheel, Haunted Train, Ghost Train & selected rides.</p>
-          <div class="price">₹150</div>
-          <a class="buy" href="#book">Buy Now</a>
-        </div>
+        <div class="panel" style="margin-top:12px;">
+          <h3 style="color:var(--accent); margin:0 0 8px 0;">Book Tickets</h3>
 
-        <div class="ticket">
-          <h3>After-8 PM Scare Pass</h3>
-          <p>Access to scarier events (18+ recommended). Valid after 8 PM.</p>
-          <div class="price">₹250</div>
-          <a class="buy" href="#book">Buy Now</a>
-        </div>
+          <form id="ticketForm" onsubmit="return false;" aria-label="Ticket booking form">
+            <label for="ticketType">Ticket Type *</label>
+            <select id="ticketType" required>
+              <option value="">-- select ticket --</option>
+            </select>
 
-        <div class="ticket">
-          <h3>Family Pack (2 Adults + 2 Kids)</h3>
-          <p>Includes family entry + 6 ride credits shared across family.</p>
-          <div class="price">₹499</div>
-          <a class="buy" href="#book">Buy Now</a>
+            <label for="qty">Quantity *</label>
+            <select id="qty" required>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+
+            <label for="buyerName">Full name *</label>
+            <input id="buyerName" type="text" placeholder="Your name" required>
+
+            <label for="buyerEmail">Email *</label>
+            <input id="buyerEmail" type="email" placeholder="you@example.com" required>
+
+            <label>Payment method *</label>
+            <div class="pay-methods" role="radiogroup" aria-label="Payment method">
+              <label><input type="radio" name="payMethod" value="paypal" checked> PayPal</label>
+              <label><input type="radio" name="payMethod" value="cash"> Cash at Counter</label>
+            </div>
+
+            <div class="actions">
+              <button id="payProceed" class="btn" type="button">PAY TO PROCEED</button>
+              <button id="resetForm" class="btn secondary" type="button">Reset</button>
+            </div>
+
+            <div id="formError" class="error" style="display:none; color:#ff9b9b; margin-top:10px;"></div>
+          </form>
+
+          <div class="summary" id="orderSummary" aria-live="polite">
+            Select a ticket and quantity to see order summary.
+          </div>
         </div>
       </div>
-    </section>
 
-    <section class="info" id="book" aria-label="ticket booking">
-      <h2 style="color:#ff6a00;">Book Tickets</h2>
-      <p class="small">Fill the form and a confirmation will be sent to the email you provide. (This is a static page — integrate with your payment/booking backend later.)</p>
+      <!-- Right column: payment area -->
+      <aside>
+        <div class="panel">
+          <h3 style="color:var(--accent); margin:0 0 8px 0;">Payment</h3>
 
-      <form onsubmit="alert('Demo: form submitted. Integrate backend to process payment.'); return false;">
-        <label for="name">Full name</label>
-        <input id="name" required />
+          <div id="paypalArea" style="display:none;">
+            <div id="paypal-container"></div>
+            <div class="muted" style="margin-top:10px; font-size:0.9rem;">(Sandbox mode — replace PayPal client id before going live.)</div>
+          </div>
 
-        <label for="email">Email</label>
-        <input id="email" type="email" required />
-
-        <label for="ticket-type">Ticket Type</label>
-        <select id="ticket-type" required>
-          <option value="">-- select --</option>
-          <option>Ride Pass (5 Rides) - ₹150</option>
-          <option>After-8 PM Scare Pass - ₹250</option>
-          <option>Family Pack - ₹499</option>
-        </select>
-
-        <label for="qty">Quantity</label>
-        <input id="qty" type="number" min="1" value="1" />
-
-        <div style="margin-top:0.8rem;">
-          <button class="buy" type="submit">Proceed to Pay</button>
+          <div id="paymentResult" style="display:none; margin-top:6px;"></div>
         </div>
-      </form>
-
-      <p class="small">Payment note: For live site, connect this form to a payment gateway and ticketing system. For now, this page is ready to submit to your backend.</p>
-    </section>
-
-    <section class="info">
-      <h2 style="color:#ff6a00;">Ticketing Rules</h2>
-      <ul style="line-height:1.6;">
-        <li>Keep proof of purchase for entry.</li>
-        <li>No refunds for weather-cancelled rides; reschedule credits may be issued.</li>
-        <li>IDs may be required for After-8 PM Scare Pass.</li>
-      </ul>
-    </section>
+      </aside>
+    </div>
   </main>
 
-  <footer>&copy; 2025 Banasthali Halloween Carnival | All Rights Reserved</footer>
+  <footer style="text-align:center; padding:10px; background:#0b0b0b; color:var(--accent); font-weight:700;">&copy; 2025 Banasthali Halloween Carnival</footer>
+
+  <!-- PayPal SDK (sandbox client-id 'sb') -->
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=INR"></script>
+
+  <!-- Embedded minimal offline QR generator (same compact implementation used previously) -->
+  <script>
+    (function(global){
+      var qrcode = (function() {
+        function makeMatrix(text) {
+          var version = 4;
+          var moduleCount = 17 + 4 * version;
+          var modules = new Array(moduleCount);
+          for(var i=0;i<moduleCount;i++){ modules[i]=new Array(moduleCount); for(var j=0;j<moduleCount;j++) modules[i][j]=null; }
+          function placeFinderPattern(r,c){
+            for(var rr=-1;rr<=7;rr++){
+              if (r+rr<=-1 || moduleCount<=r+rr) continue;
+              for(var cc=-1;cc<=7;cc++){
+                if (c+cc<=-1 || moduleCount<=c+cc) continue;
+                if ((0<=rr && rr<=6 && (cc==0||cc==6)) || (0<=cc && cc<=6 && (rr==0||rr==6)) || (2<=rr && rr<=4 && 2<=cc && cc<=4))
+                  modules[r+rr][c+cc]=true;
+                else
+                  modules[r+rr][c+cc]=false;
+              }
+            }
+          }
+          placeFinderPattern(0,0);
+          placeFinderPattern(moduleCount-7,0);
+          placeFinderPattern(0,moduleCount-7);
+          for(var i=8;i<moduleCount-8;i++){
+            if (modules[i][6] == null) modules[i][6] = (i % 2 == 0);
+            if (modules[6][i] == null) modules[6][i] = (i % 2 == 0);
+          }
+          function utf8bytes(s){
+            var out=[];
+            for(var j=0;j<s.length;j++){
+              var c=s.charCodeAt(j);
+              if (c<128) out.push(c);
+              else if (c<2048){ out.push(192|(c>>6)); out.push(128|(c&63)); }
+              else { out.push(224|(c>>12)); out.push(128|((c>>6)&63)); out.push(128|(c&63)); }
+            }
+            return out;
+          }
+          var dataBytes = utf8bytes(text);
+          var maxData = Math.floor((moduleCount*moduleCount)/8) - 20;
+          if (dataBytes.length > maxData) { dataBytes = dataBytes.slice(0, maxData); }
+          var bits = [];
+          for(var i=0;i<dataBytes.length;i++){
+            for(var b=7;b>=0;b--) bits.push((dataBytes[i]>>b)&1);
+          }
+          while(bits.length < moduleCount*moduleCount - 64) bits.push(0);
+          var dirUp = true;
+          var x = moduleCount - 1;
+          var bitIndex = 0;
+          while(x > 0){
+            if (x == 6) x--;
+            for(var i=0;i<moduleCount;i++){
+              var yy = dirUp ? moduleCount -1 - i : i;
+              for(var col = 0; col < 2; col++){
+                var xx = x - col;
+                if (modules[yy][xx] === null){
+                  modules[yy][xx] = (bits[bitIndex] === 1);
+                  bitIndex++;
+                  if (bitIndex >= bits.length) { bitIndex = bits.length; }
+                }
+              }
+            }
+            dirUp = !dirUp;
+            x -= 2;
+          }
+          for(var r=0;r<moduleCount;r++) for(var c=0;c<moduleCount;c++) if (modules[r][c] === null) modules[r][c] = false;
+          return {modules:modules, size:moduleCount};
+        }
+        function toDataURL(text, size, margin, colorDark, colorLight) {
+          size = size || 300;
+          margin = (typeof margin === 'number') ? margin : 8;
+          colorDark = colorDark || '#000';
+          colorLight = colorLight || '#fff';
+          var mat = makeMatrix(text);
+          var moduleCount = mat.size;
+          var canvas = document.createElement('canvas');
+          var scale = Math.floor((size - margin*2) / moduleCount);
+          if (scale < 1) scale = 1;
+          var canvasSize = moduleCount * scale + margin*2;
+          canvas.width = canvasSize;
+          canvas.height = canvasSize;
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = colorLight;
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.fillStyle = colorDark;
+          for(var r=0;r<moduleCount;r++){
+            for(var c=0;c<moduleCount;c++){
+              if (mat.modules[r][c]) {
+                ctx.fillRect(margin + c*scale, margin + r*scale, scale, scale);
+              }
+            }
+          }
+          return canvas.toDataURL('image/png');
+        }
+        return { toDataURL: toDataURL };
+      })();
+      global.MinimalQR = qrcode;
+    })(this);
+  </script>
+
+  <script>
+    /**********************************************
+     * Tickets with PayPal (INR) + Cash at Counter + offline QR (data-URL)
+     * UI updated: denser ticket cards with icons and hover
+     **********************************************/
+
+    const TICKETS = [
+      { id: 'general', title: 'General Entry (Evening)', price: 0, desc: 'Access to grounds. 6 PM - 9 PM' },
+      { id: 'ride5', title: 'Ride Pass (5 Rides)', price: 150, desc: 'Valid for 5 rides' },
+      { id: 'after8', title: 'After-8 PM Scare Pass (18+)', price: 250, desc: 'After 8 PM access (18+ recommended)' },
+      { id: 'family', title: 'Family Pack (2 Adults + 2 Kids)', price: 499, desc: '2 adults + 2 kids + 6 ride credits' }
+    ];
+    const PAYPAL_CURRENCY = 'INR';
+
+    // Elements
+    const ticketsList = document.getElementById('ticketsList');
+    const ticketTypeEl = document.getElementById('ticketType');
+    const qtyEl = document.getElementById('qty');
+    const buyerNameEl = document.getElementById('buyerName');
+    const buyerEmailEl = document.getElementById('buyerEmail');
+    const payProceedBtn = document.getElementById('payProceed');
+    const resetFormBtn = document.getElementById('resetForm');
+    const orderSummaryEl = document.getElementById('orderSummary');
+    const paypalArea = document.getElementById('paypalArea');
+    const paypalContainer = document.getElementById('paypal-container');
+    const formError = document.getElementById('formError');
+    const paymentResult = document.getElementById('paymentResult');
+
+    function getSelectedPaymentMethod() {
+      const r = document.querySelector('input[name="payMethod"]:checked');
+      return r ? r.value : 'paypal';
+    }
+
+    // Wire ticket card clicks to select the type
+    ticketsList.querySelectorAll('.ticket-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.getAttribute('data-ticket');
+        if (!id) return;
+        ticketTypeEl.value = id;
+        // small attention cue: highlight selected card
+        ticketsList.querySelectorAll('.ticket-card').forEach(c => c.style.boxShadow = '');
+        card.style.boxShadow = '0 10px 30px rgba(0,0,0,0.6), 0 0 0 3px rgba(255,106,0,0.06)';
+        updateSummary();
+        // remove highlight after 2s
+        setTimeout(() => {
+          card.style.boxShadow = '';
+        }, 2200);
+      });
+    });
+
+    // populate select options
+    function initTicketOptions() {
+      ticketTypeEl.innerHTML = '<option value="">-- select ticket --</option>';
+      TICKETS.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = `${t.title} ${t.price>0 ? '- ₹' + t.price : '- Free'}`;
+        ticketTypeEl.appendChild(opt);
+      });
+    }
+
+    function computeTotalInINR() {
+      const tid = ticketTypeEl.value;
+      const qty = Number(qtyEl.value) || 1;
+      const ticket = TICKETS.find(x => x.id === tid);
+      if (!ticket) return { subtotal: 0, ticket: null, qty: qty };
+      return { subtotal: ticket.price * qty, ticket, qty };
+    }
+
+    function updateSummary() {
+      const { subtotal, ticket, qty } = computeTotalInINR();
+      if (!ticket) {
+        orderSummaryEl.innerHTML = 'Select a ticket and quantity to see the summary.';
+        return;
+      }
+      const pm = getSelectedPaymentMethod();
+      const duesPreview = (pm === 'cash' && subtotal > 0) ? `<span class="dues-preview">DUES (Cash at Counter)</span>` : '';
+      orderSummaryEl.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div>
+            <div style="font-weight:800; color:var(--accent);">${ticket.title} ${duesPreview}</div>
+            <div class="muted" style="margin-top:6px;">${ticket.desc}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:900; font-size:1.05rem;">₹${subtotal}</div>
+            <div class="muted" style="font-size:0.86rem; margin-top:6px;">Payment: ${pm === 'paypal' ? 'PayPal' : 'Cash at Counter'}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function validateForm() {
+      formError.style.display = 'none';
+      const tid = ticketTypeEl.value;
+      if (!tid) return 'Please select a ticket type.';
+      const name = buyerNameEl.value.trim();
+      if (!name) return 'Please enter your full name.';
+      const email = buyerEmailEl.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
+      return null;
+    }
+
+    // PayPal rendering & handlers (client-side createOrder demo)
+    function renderPayPalButtons(amountStr, amountINR, selectedTicketInfo) {
+      paypalContainer.innerHTML = '';
+      paypalArea.style.display = 'block';
+      if (typeof paypal === 'undefined') { alert('PayPal SDK not loaded.'); return; }
+
+      paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { currency_code: PAYPAL_CURRENCY, value: amountStr },
+              description: `${selectedTicketInfo.ticket.title} x${selectedTicketInfo.qty} — ₹${amountINR}`
+            }],
+            application_context: { shipping_preference: 'NO_SHIPPING' }
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            handleSuccessfulPayment(details, selectedTicketInfo, amountINR, amountStr);
+          });
+        },
+        onError: function(err) {
+          console.error('PayPal error', err);
+          formError.style.display = 'block';
+          formError.textContent = 'Payment error occurred. Try again or contact support.';
+        }
+      }).render('#paypal-container');
+    }
+
+    function handleSuccessfulPayment(details, selectedTicketInfo, amountINR, amountStr) {
+      paypalArea.style.display = 'none';
+      paymentResult.style.display = 'block';
+      paymentResult.className = 'panel success';
+      const orderId = details.id || ('PAY-' + Date.now());
+      paymentResult.innerHTML = `
+        <div style="font-weight:900; color:#bff0c9;">Payment confirmed</div>
+        <div style="margin-top:8px;">Ticket: <strong>${selectedTicketInfo.ticket.title}</strong> × ${selectedTicketInfo.qty}</div>
+        <div>Subtotal: <strong>₹${amountINR}</strong></div>
+        <div>Paid: <strong>${PAYPAL_CURRENCY} ${amountStr}</strong> via PayPal</div>
+        <div style="margin-top:8px;color:#cfe9d8">${details.payer?.name?.given_name || ''} ${details.payer?.name?.surname || ''} (${details.payer?.email_address || ''})</div>
+        <div style="margin-top:8px;">
+          <button id="printTicketBtn" class="btn">Print Ticket</button>
+        </div>
+      `;
+      document.getElementById('printTicketBtn').addEventListener('click', () => {
+        openPrintableTicket(details, selectedTicketInfo, amountINR, orderId, false);
+      });
+
+      ticketTypeEl.value = '';
+      qtyEl.value = '1';
+      buyerNameEl.value = '';
+      buyerEmailEl.value = '';
+      updateSummary();
+    }
+
+    function handleCashBooking(selectedTicketInfo) {
+      paymentResult.style.display = 'block';
+      paymentResult.className = 'panel success';
+      const orderId = 'CASH-' + Date.now();
+      paymentResult.innerHTML = `
+        <div style="font-weight:900; color:#ffd1d1;">Booking recorded — pay at counter <span style="margin-left:8px;color:#ffb3b3;font-weight:900">DUES</span></div>
+        <div style="margin-top:8px;">Ticket: <strong>${selectedTicketInfo.ticket.title}</strong> × ${selectedTicketInfo.qty}</div>
+        <div style="margin-top:6px;color:#bfe8c9">Please pay ₹${selectedTicketInfo.subtotal} at the venue counter on arrival.</div>
+        <div style="margin-top:10px;"><button id="printTicketBtnCash" class="btn">Print Ticket (DUES)</button></div>
+      `;
+      document.getElementById('printTicketBtnCash').addEventListener('click', () => {
+        openPrintableTicket({ id: orderId, payer: { name: { given_name: '', surname: '' }, email_address: buyerEmailEl.value.trim() } }, selectedTicketInfo, selectedTicketInfo.subtotal, orderId, true);
+      });
+
+      ticketTypeEl.value = '';
+      qtyEl.value = '1';
+      buyerNameEl.value = '';
+      buyerEmailEl.value = '';
+      updateSummary();
+    }
+
+    // Generate QR and open print window
+    function openPrintableTicket(paypalDetails, selectedTicketInfo, amountINR, orderId, isDues = false) {
+      const buyerName = buyerNameEl.value.trim() || (paypalDetails.payer && ((paypalDetails.payer.name && ((paypalDetails.payer.name.given_name || '') + ' ' + (paypalDetails.payer.name.surname || ''))) || ''));
+      const buyerEmail = buyerEmailEl.value.trim() || (paypalDetails.payer && paypalDetails.payer.email_address) || '';
+      const ticketTitle = selectedTicketInfo.ticket.title;
+      const qty = selectedTicketInfo.qty;
+      const subtotal = amountINR;
+
+      const qrPayload = {
+        orderId: String(orderId),
+        ticketId: selectedTicketInfo.ticket.id,
+        ticketTitle: ticketTitle,
+        qty: qty,
+        amount: subtotal,
+        buyerName: buyerName,
+        buyerEmail: buyerEmail,
+        dues: !!isDues,
+        issuedAt: new Date().toISOString()
+      };
+
+      var qrDataUrl = '';
+      try {
+        qrDataUrl = MinimalQR.toDataURL(JSON.stringify(qrPayload), 300);
+      } catch (e) {
+        console.error('QR generation failed', e);
+        qrDataUrl = '';
+      }
+
+      const ticketHtml = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ticket — ${escapeHtml(ticketTitle)}</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; padding:20px; color:#111; background:#fff; }
+    .ticket-wrap { max-width:760px; margin:0 auto; position:relative; }
+    .ticket { border:2px dashed #333; padding:18px; border-radius:8px; position:relative; overflow:visible; background:#fff; display:flex; gap:12px; align-items:flex-start; }
+    .left { flex:1; }
+    header { display:flex; justify-content:space-between; align-items:center; }
+    h1 { margin:0; color:var(--accent, #ff6a00); font-size:20px; }
+    .meta { margin-top:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .block { margin-top:12px; }
+    .label { color:#666; font-size:12px; margin-bottom:6px; }
+    .big { font-size:18px; font-weight:700; }
+    .muted { color:#555; font-size:13px; }
+    .btnPrint { margin-top:18px; padding:10px 14px; background:#ff6a00; color:#fff; border:none; border-radius:6px; font-weight:700; cursor:pointer; }
+    .footer { margin-top:18px; font-size:12px; color:#666; }
+    .qr { width:300px; min-width:150px; }
+    .dues-stamp {
+      position:absolute;
+      top:38%;
+      left:50%;
+      transform:translate(-50%,-50%) rotate(-20deg);
+      font-size:86px;
+      font-weight:900;
+      color:rgba(255,0,0,0.14);
+      -webkit-text-stroke: 2px rgba(200,0,0,0.5);
+      text-transform:uppercase;
+      pointer-events:none;
+      z-index:50;
+    }
+    @media print {
+      body { background:#fff; }
+      .btnPrint { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket-wrap">
+    <div class="ticket">
+      ${ isDues ? '<div class="dues-stamp">DUES</div>' : '' }
+      <div class="left">
+        <header>
+          <div>
+            <h1>Banasthali Halloween Carnival</h1>
+            <div class="muted">Official Ticket</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="muted">Order ID</div>
+            <div class="big">${escapeHtml(orderId)}</div>
+          </div>
+        </header>
+
+        <div class="block">
+          <div class="label">Attendee</div>
+          <div><strong>${escapeHtml(buyerName || '—')}</strong></div>
+          <div class="muted">${escapeHtml(buyerEmail || '')}</div>
+        </div>
+
+        <div class="block meta">
+          <div>
+            <div class="label">Ticket</div>
+            <div><strong>${escapeHtml(ticketTitle)}</strong></div>
+          </div>
+          <div>
+            <div class="label">Quantity</div>
+            <div><strong>${qty}</strong></div>
+          </div>
+          <div>
+            <div class="label">Amount</div>
+            <div><strong>₹${subtotal}</strong></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="label">Notes</div>
+          <div class="muted">Bring this ticket (printed or as PDF) and a valid ID for After-8 PM Scare Pass if applicable. Show this QR to staff for quick verification. This is a demo ticket (no server verification).</div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btnPrint" onclick="window.print()">Print / Save as PDF</button>
+        </div>
+
+        <div class="footer">Generated: ${new Date().toLocaleString()}</div>
+      </div>
+
+      <div class="qr">
+        ${ qrDataUrl ? `<img src="${qrDataUrl}" alt="Ticket QR code" style="width:100%;height:auto;border:1px solid #ddd;padding:6px;background:#fff;">` : '<div style="color:#a00">QR generation failed</div>' }
+        <div class="muted" style="text-align:center;margin-top:6px;font-size:12px;">Scan at gate to verify</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+      `.trim();
+
+      const w = window.open('', '_blank', 'noopener,noreferrer');
+      if (!w) {
+        alert('Popup blocked — please allow popups for this site to print the ticket.');
+        return;
+      }
+      w.document.open();
+      w.document.write(ticketHtml);
+      w.document.close();
+      setTimeout(() => { try { w.focus(); } catch(e){} }, 300);
+    }
+
+    function escapeHtml(str) {
+      if (!str && str !== 0) return '';
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[m];
+      });
+    }
+
+    function handleSuccessfulFreeBooking(selectedTicketInfo) {
+      paymentResult.style.display = 'block';
+      paymentResult.className = 'panel success';
+      const orderId = 'FREE-' + Date.now();
+      paymentResult.innerHTML = `
+        <div style="font-weight:900; color:#bff0c9;">Booking confirmed (Free entry)</div>
+        <div style="margin-top:8px;">Ticket: <strong>${selectedTicketInfo.ticket.title}</strong> × ${selectedTicketInfo.qty}</div>
+        <div style="margin-top:6px;color:#bfe8c9">A confirmation will be sent to ${buyerEmailEl.value.trim()} (demo only).</div>
+        <div style="margin-top:10px;"><button id="printTicketBtnFree" class="btn">Print Ticket</button></div>
+      `;
+      document.getElementById('printTicketBtnFree').addEventListener('click', () => {
+        openPrintableTicket({ id: orderId, payer: { name: { given_name: '', surname: '' }, email_address: buyerEmailEl.value.trim() } }, selectedTicketInfo, selectedTicketInfo.subtotal || 0, orderId, false);
+      });
+
+      ticketTypeEl.value = '';
+      qtyEl.value = '1';
+      buyerNameEl.value = '';
+      buyerEmailEl.value = '';
+      updateSummary();
+    }
+
+    // Init UI and events
+    initTicketOptions();
+    updateSummary();
+
+    // wire controls
+    ticketTypeEl.addEventListener('change', updateSummary);
+    qtyEl.addEventListener('change', updateSummary);
+    buyerNameEl.addEventListener('input', () => formError.style.display = 'none');
+    buyerEmailEl.addEventListener('input', () => formError.style.display = 'none');
+    document.querySelectorAll('input[name="payMethod"]').forEach(r => r.addEventListener('change', updateSummary));
+
+    payProceedBtn.addEventListener('click', () => {
+      const err = validateForm();
+      if (err) {
+        formError.style.display = 'block';
+        formError.textContent = err;
+        return;
+      }
+      formError.style.display = 'none';
+
+      const { subtotal, ticket, qty } = computeTotalInINR();
+      if (!ticket) return;
+      const pm = getSelectedPaymentMethod();
+      const buyer = { name: buyerNameEl.value.trim(), email: buyerEmailEl.value.trim() };
+      sessionStorage.setItem('ticket_buyer', JSON.stringify(buyer));
+
+      if (pm === 'cash') {
+        handleCashBooking({ ticket, qty, subtotal });
+        paypalArea.style.display = 'none';
+        paypalContainer.innerHTML = '';
+        return;
+      }
+
+      if (subtotal === 0) {
+        handleSuccessfulFreeBooking({ ticket, qty, subtotal });
+        return;
+      }
+
+      const amountStr = Number(subtotal).toFixed(2);
+      renderPayPalButtons(amountStr, subtotal, { ticket, qty });
+      setTimeout(() => { document.getElementById('paypal-container').scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250);
+    });
+
+    resetFormBtn.addEventListener('click', () => {
+      ticketTypeEl.value = '';
+      qtyEl.value = '1';
+      buyerNameEl.value = '';
+      buyerEmailEl.value = '';
+      orderSummaryEl.innerHTML = 'Select a ticket and quantity to see the summary.';
+      paypalArea.style.display = 'none';
+      paymentResult.style.display = 'none';
+      formError.style.display = 'none';
+      if (paypalContainer) paypalContainer.innerHTML = '';
+    });
+
+    document.getElementById('ticketForm').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); payProceedBtn.click(); }
+    });
+  </script>
 </body>
 </html>
