@@ -1,737 +1,446 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Books & Movies - Halloween Carnival Banasthali</title>
+  <title>Books & Movies — Banasthali Halloween Carnival</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="referrer" content="no-referrer" />
   <style>
-    body { margin:0; font-family:"Trebuchet MS", sans-serif; background:#0d0d0d; color:#f8f8f8; }
-    header { background:#111; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; }
-    header h1 { margin:0; color:#ff6a00; font-size:1.2rem; }
-    nav a { color:#fff; text-decoration:none; margin-left:1rem; font-weight:bold; }
-    .container { max-width:1000px; margin:2rem auto; padding:0 1rem; }
-    .grid { display:grid; grid-template-columns:1fr 320px; gap:1rem; }
-    .list { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a00aa; }
-    .book { border-bottom:1px solid #2a2a2a; padding:0.8rem 0; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .book:last-child { border-bottom:none; }
-    .book h3 { margin:0; color:#ff6a00; font-size:1rem; }
-    .book .meta { color:#cfcfcf; font-size:0.92rem; }
-    .movie { margin-bottom:1rem; padding:0.6rem; background:#111; border-radius:6px; }
-    .sidebar { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a0066; }
-    footer { text-align:center; padding:1rem; background:#0b0b0b; color:rgb(255,0,0); margin-top:2rem; }
-    .btn { background:#ff6a00; color:#111; padding:0.5rem 0.8rem; border-radius:6px; text-decoration:none; font-weight:bold; display:inline-block; border:none; cursor:pointer; }
-    .btn.secondary { background:#222; color:#fff; }
-    .small { color:#cfcfcf; font-size:0.9rem; margin:0.25rem 0 0 0; }
+    /* Basic reset and layout */
+    :root{
+      --bg:#0f1720;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#ff6a00;
+      --surface:#0f1724;
+      --success:#0bb07a;
+      --danger:#ff4b4b;
+      --radius:10px;
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:linear-gradient(180deg,var(--bg),#071019 120%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding-bottom:40px;
+    }
 
-    /* modal */
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:9999; }
-    .modal { background:#0f0f0f; border-radius:10px; padding:18px; width:clamp(320px, 90%, 520px); box-shadow:0 8px 28px rgba(0,0,0,0.7); color:#fff; }
-    .modal h3 { margin:0 0 8px 0; color:#ff6a00; }
-    .field { margin:8px 0; display:flex; flex-direction:column; gap:6px; }
-    .field label { font-size:0.9rem; color:#ddd; }
-    .field input, .field select { padding:8px 10px; border-radius:6px; border:1px solid #333; background:#0b0b0b; color:#fff; }
-    .modal .actions { margin-top:12px; display:flex; gap:8px; justify-content:flex-end; }
-    .error { color:#ff9b9b; font-size:0.9rem; margin-top:6px; display:none; }
+    header{
+      background:linear-gradient(90deg, rgba(255,106,0,0.12), rgba(255,106,0,0.06));
+      padding:18px 20px;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+    }
+    .nav {
+      max-width:var(--max-width);
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand { display:flex; gap:12px; align-items:center; }
+    .brand .logo {
+      width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ff9a3a);
+      display:flex;align-items:center;justify-content:center;font-weight:800;color:#081019;
+      box-shadow:0 6px 20px rgba(255,106,0,0.12);
+    }
+    .brand h1{margin:0;font-size:18px;letter-spacing:0.2px}
+    nav.links{display:flex;gap:14px;align-items:center}
+    nav.links a { color:#dbe9ff; text-decoration:none; font-weight:600; font-size:14px; opacity:0.92 }
+    nav.links a:hover{opacity:1;text-decoration:underline}
+
+    main.container{
+      max-width:var(--max-width);
+      margin:28px auto;
+      padding:0 20px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+      align-items:start;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow: 0 6px 30px rgba(3,8,15,0.6);
+    }
+
+    .catalog h2, .sidebar h3 { margin:0 0 12px 0; color:var(--accent) }
+
+    .item {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 8px;
+      border-radius:8px;
+      transition:background .18s, transform .12s;
+      align-items:center;
+      border:1px solid transparent;
+    }
+    .item + .item { margin-top:10px; }
+    .item:hover { background:rgba(255,255,255,0.02); transform:translateY(-2px); border-color:rgba(255,255,255,0.02) }
+
+    .item .meta { display:flex; flex-direction:column; gap:4px }
+    .item .meta .title { font-weight:700; font-size:15px; color:#fff }
+    .item .meta .desc { color:var(--muted); font-size:13px }
+
+    .item .actions { display:flex; gap:8px; align-items:center }
+    .btn {
+      border:0; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px;
+      background:var(--accent); color:#081019;
+      box-shadow: 0 6px 18px rgba(255,106,0,0.08);
+    }
+    .btn.ghost { background:transparent; color:#dbe9ff; border:1px solid rgba(255,255,255,0.04) }
+    .btn.small{ padding:6px 10px; font-size:13px }
+
+    .sidebar .block { margin-bottom:12px }
+    .price { font-weight:800; color:#fff; font-size:14px }
+
+    /* Modal */
+    .modal-backdrop{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1200; background:rgba(3,8,15,0.6); padding:20px }
+    .modal {
+      width:100%; max-width:480px;
+      background:linear-gradient(180deg,#07121a,#0b1a25);
+      border-radius:12px; padding:18px; border:1px solid rgba(255,255,255,0.04);
+      box-shadow:0 20px 60px rgba(3,8,15,0.8);
+    }
+    .modal h3 { margin:0 0 8px 0; color:var(--accent) }
+    .form-row { margin-top:10px; display:flex; gap:8px; flex-direction:column }
+    label { color:var(--muted); font-size:13px; margin-bottom:6px; display:block }
+    input[type="text"], input[type="tel"] {
+      width:100%; padding:10px 12px; border-radius:8px; background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03); color:#eaf4ff; font-size:14px;
+    }
+    .modal .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px }
+    .modal .actions .btn.secondary { background:#0b1220; color:#dbe9ff; border:1px solid rgba(255,255,255,0.04) }
+
+    .error { color:var(--danger); font-size:13px; margin-top:8px; display:none }
+
+    /* Confirmation area (inline) */
+    .confirmation {
+      margin-top:18px;
+      padding:14px;
+      border-radius:10px;
+      background:linear-gradient(90deg, rgba(11,26,32,0.6), rgba(4,9,14,0.4));
+      border:1px solid rgba(255,255,255,0.02);
+      display:none;
+    }
+    .confirmation .title { color:var(--success); font-weight:800; margin:0 0 8px 0; font-size:16px }
+    .confirmation p { margin:6px 0; color:#e6eef6 }
+    .confirmation .small { color:var(--muted); font-size:13px }
+
+    footer { max-width:var(--max-width); margin:28px auto 0; padding:8px 20px; color:var(--muted); font-size:13px; text-align:center }
 
     @media (max-width:900px) {
-      .grid { grid-template-columns:1fr; }
-      .sidebar { order:2; }
+      main.container { grid-template-columns:1fr; padding:12px }
+      .sidebar { order:2 }
     }
   </style>
-
-  <!-- jsPDF for PDF generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <header>
-    <h1>🎃 Banasthali Carnival — Books & Movies</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="tickets.html">Tickets</a>
-      <a href="book-movie.html">Books & Movies</a>
-      <a href="merch.html">Merch</a>
-    </nav>
+    <div class="nav" role="navigation" aria-label="Main navigation">
+      <div class="brand" role="img" aria-label="Banasthali Carnival">
+        <div class="logo" aria-hidden="true">BH</div>
+        <div>
+          <h1>Banasthali Halloween Carnival</h1>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px">Books & Movies · Reserve / Book</div>
+        </div>
+      </div>
+
+      <nav class="links" aria-label="Site links">
+        <a href="index.html">Home</a>
+        <a href="tickets.html">Tickets</a>
+        <a href="merch.html">Merch</a>
+      </nav>
+    </div>
   </header>
 
-  <div class="container">
-    <div style="text-align:left; color:#ff6a00; margin-bottom:0.8rem;"><h2>Classic Horror Books & Festival Movie Screenings</h2></div>
+  <main class="container" role="main">
+    <!-- Catalog -->
+    <section class="panel catalog" aria-labelledby="catalogTitle">
+      <h2 id="catalogTitle">Available — Reserve & Book</h2>
 
-    <div class="grid">
-      <div class="list" aria-label="books list">
-        <h3 style="color:#ff6a00;">Featured Book Fair</h3>
-
-        <div class="book" data-item-id="book-gothic" data-item-type="book">
-          <div>
-            <h3>Collected Gothic Tales</h3>
-            <p class="small">Curated selection of gothic short stories. Stall: A3.</p>
-          </div>
-          <div>
-            <button class="btn action-reserve" data-action="reserve" data-title="Collected Gothic Tales">Reserve Copy</button>
-          </div>
+      <div class="item" data-item-id="book-gothic" data-item-type="book" data-item-title="Collected Gothic Tales">
+        <div class="meta">
+          <div class="title">Collected Gothic Tales</div>
+          <div class="desc">Stall A3 — curated gothic short stories</div>
         </div>
-
-        <div class="book" data-item-id="book-dracula" data-item-type="book">
-          <div>
-            <h3>Horror Classics: Dracula & More</h3>
-            <p class="small">New editions and local translations available. Stall: B1.</p>
-          </div>
-          <div>
-            <button class="btn action-reserve" data-action="reserve" data-title="Horror Classics: Dracula & More">Reserve Copy</button>
-          </div>
-        </div>
-
-        <div class="book" data-item-id="book-local" data-item-type="event">
-          <div>
-            <h3>Local Authors — Spooky Shortlists</h3>
-            <p class="small">Meet-and-greet at 7 PM on 29 Oct (costume recommended).</p>
-          </div>
-          <div>
-            <button class="btn action-bookseat" data-action="bookseat" data-title="Local Authors — Spooky Shortlists">Book Seat</button>
-          </div>
+        <div class="actions">
+          <button class="btn small open-booking" data-action="reserve">Reserve Copy</button>
         </div>
       </div>
 
-      <aside class="sidebar" aria-label="movie schedule">
-        <h3 style="color:#ff6a00;">Outdoor Movie Nights</h3>
-
-        <div class="movie" data-movie-id="movie-dracula" data-movie-date="2025-10-30">
-          <strong>30 Oct — Dracula</strong>
-          <p class="small">Screening starts at 8 PM. Free seating; blankets suggested.</p>
-          <div style="margin-top:8px;">
-            <button class="btn action-bookmovie" data-action="bookmovie" data-title="Dracula" data-date="2025-10-30">Book Movie Seat</button>
-          </div>
+      <div class="item" data-item-id="book-dracula" data-item-type="book" data-item-title="Horror Classics: Dracula & More">
+        <div class="meta">
+          <div class="title">Horror Classics: Dracula & More</div>
+          <div class="desc">Stall B1 — new editions and translations</div>
         </div>
-
-        <div class="movie" data-movie-id="movie-shorts" data-movie-date="2025-10-31">
-          <strong>31 Oct — Classic Horror Short Films</strong>
-          <p class="small">Short film block at 9 PM. Family friendly block early evening.</p>
-          <div style="margin-top:8px;">
-            <button class="btn action-bookmovie" data-action="bookmovie" data-title="Classic Horror Short Films" data-date="2025-10-31">Book Movie Seat</button>
-          </div>
+        <div class="actions">
+          <button class="btn small open-booking" data-action="reserve">Reserve Copy</button>
         </div>
+      </div>
 
-        <div class="movie" data-movie-id="movie-anthology" data-movie-date="2025-11-01">
-          <strong>1 Nov — Festival Wrap: Horror Anthology</strong>
-          <p class="small">Highlights and audience vote for favourite short.</p>
-          <div style="margin-top:8px;">
-            <button class="btn action-bookmovie" data-action="bookmovie" data-title="Horror Anthology" data-date="2025-11-01">Book Movie Seat</button>
-          </div>
+      <div class="item" data-item-id="event-local" data-item-type="event" data-item-title="Local Authors — Spooky Shortlists">
+        <div class="meta">
+          <div class="title">Local Authors — Spooky Shortlists (Event seat)</div>
+          <div class="desc">Meet & greet — limited seats</div>
         </div>
+        <div class="actions">
+          <button class="btn small open-booking" data-action="bookseat">Book Seat</button>
+        </div>
+      </div>
 
-      </aside>
-    </div>
+      <div style="height:12px"></div>
 
-    <section style="margin-top:1rem;" class="list">
-      <h3 style="color:#ff6a00;">Vendor Info (For book sellers)</h3>
-      <p class="small">Stall booking is managed by the carnival committee. Vendors should bring their own tables and lighting. Contact: books@banasthali-carnival.example (replace with real contact when available).</p>
+      <div class="confirmation" id="confirmation" role="status" aria-live="polite">
+        <div class="title" id="confirmTitle">Booking confirmed</div>
+        <p id="confirmMessage">Your ticket is booked. Please collect it from the counter.</p>
+        <p class="small" id="confirmDetails" aria-hidden="false"></p>
+      </div>
     </section>
-  </div>
 
-  <footer>&copy; 2025 Banasthali Halloween Carnival | All Rights Reserved</footer>
+    <!-- Sidebar: movie nights, info -->
+    <aside class="panel sidebar" aria-labelledby="sidebarTitle">
+      <h3 id="sidebarTitle">Outdoor Movie Nights</h3>
 
-  <!-- Modal template (hidden until needed) -->
-  <div id="modalRoot" style="display:none;">
-    <div class="modal-backdrop" id="modalBackdrop">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <h3 id="modalTitle">Reserve / Book</h3>
-
-        <form id="modalForm">
-          <input type="hidden" id="modalAction" name="action" value="">
-          <input type="hidden" id="modalItemId" name="itemId" value="">
-          <input type="hidden" id="modalItemTitle" name="itemTitle" value="">
-          <div class="field">
-            <label for="name">Your full name *</label>
-            <input id="name" name="name" type="text" required placeholder="Jane Doe">
+      <div class="block">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800">30 Oct — Dracula</div>
+            <div class="small">8 PM — Free seating</div>
           </div>
-          <div class="field">
-            <label for="email">Email *</label>
-            <input id="email" name="email" type="email" required placeholder="you@example.com">
+          <div>
+            <button class="btn small open-booking" data-action="bookmovie" data-item-title="Dracula">Book</button>
           </div>
-          <div class="field">
-            <label for="phone">Phone *</label>
-            <input id="phone" name="phone" type="tel" required placeholder="+91 98765 43210">
-          </div>
-
-          <div class="field" id="extraFieldContainer" style="display:none;">
-            <label id="extraLabel" for="extraInput">Quantity / Seats</label>
-            <input id="extraInput" name="extra" type="number" min="1" value="1">
-          </div>
-
-          <div class="actions">
-            <button type="button" class="btn secondary" id="modalCancel">Cancel</button>
-            <button type="submit" class="btn" id="modalSubmit">Confirm</button>
-          </div>
-          <div class="error" id="modalError">Please fill in required fields.</div>
-        </form>
+        </div>
       </div>
+
+      <div class="block">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800">31 Oct — Short Horror Films</div>
+            <div class="small">9 PM — Short film block</div>
+          </div>
+          <div>
+            <button class="btn small open-booking" data-action="bookmovie" data-item-title="Classic Horror Short Films">Book</button>
+          </div>
+        </div>
+      </div>
+
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,0.02);margin:12px 0">
+
+      <div class="small">Vendor bookings are handled by the carnival committee. For vendor enquiries please contact: <strong style="color:var(--accent)">books@banasthali-carnival.com</strong></div>
+    </aside>
+  </main>
+
+  <footer>
+    &copy; 2025 Banasthali Halloween Carnival | All Rights Reserved
+  </footer>
+
+  <!-- Modal (Name + Mobile only) -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document" aria-describedby="modalDesc">
+      <h3 id="modalTitle">Confirm booking</h3>
+      <div id="modalDesc" class="small" style="margin-bottom:8px;color:var(--muted)">Please enter your name and mobile number to confirm.</div>
+
+      <form id="bookingForm" novalidate>
+        <input type="hidden" id="formItemId" name="itemId" value="">
+        <input type="hidden" id="formItemType" name="itemType" value="">
+        <input type="hidden" id="formItemTitle" name="itemTitle" value="">
+        <div class="form-row">
+          <label for="custName">Full name</label>
+          <input id="custName" name="name" type="text" autocomplete="name" inputmode="text" placeholder="Jane Doe" required>
+        </div>
+
+        <div class="form-row">
+          <label for="custMobile">Mobile number</label>
+          <input id="custMobile" name="mobile" type="tel" inputmode="tel" placeholder="+91 98765 43210" pattern="[\d\+\-\s]+" required>
+        </div>
+
+        <div class="error" id="modalError" role="alert" aria-live="assertive"></div>
+
+        <div class="actions" style="margin-top:12px">
+          <button type="button" class="btn ghost secondary" id="btnCancel">Cancel</button>
+          <button type="submit" class="btn" id="btnConfirm">Confirm booking</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Minimal offline QR generator (compact, canvas-based) -->
   <script>
-  (function(global){
-    var qrcode = (function() {
-      function makeMatrix(text) {
-        var version = 4;
-        var moduleCount = 17 + 4 * version;
-        var modules = new Array(moduleCount);
-        for(var i=0;i<moduleCount;i++){ modules[i]=new Array(moduleCount); for(var j=0;j<moduleCount;j++) modules[i][j]=null; }
-        function placeFinderPattern(r,c){
-          for(var rr=-1;rr<=7;rr++){
-            if (r+rr<=-1 || moduleCount<=r+rr) continue;
-            for(var cc=-1;cc<=7;cc++){
-              if (c+cc<=-1 || moduleCount<=c+cc) continue;
-              if ((0<=rr && rr<=6 && (cc==0||cc==6)) || (0<=cc && cc<=6 && (rr==0||rr==6)) || (2<=rr && rr<=4 && 2<=cc && cc<=4))
-                modules[r+rr][c+cc]=true;
-              else
-                modules[r+rr][c+cc]=false;
-            }
-          }
-        }
-        placeFinderPattern(0,0);
-        placeFinderPattern(moduleCount-7,0);
-        placeFinderPattern(0,moduleCount-7);
-        for(var i=8;i<moduleCount-8;i++){
-          if (modules[i][6] == null) modules[i][6] = (i % 2 == 0);
-          if (modules[6][i] == null) modules[6][i] = (i % 2 == 0);
-        }
-        function utf8bytes(s){
-          var out=[];
-          for(var j=0;j<s.length;j++){
-            var c=s.charCodeAt(j);
-            if (c<128) out.push(c);
-            else if (c<2048){ out.push(192|(c>>6)); out.push(128|(c&63)); }
-            else { out.push(224|(c>>12)); out.push(128|((c>>6)&63)); out.push(128|(c&63)); }
-          }
-          return out;
-        }
-        var dataBytes = utf8bytes(text);
-        var maxData = Math.floor((moduleCount*moduleCount)/8) - 20;
-        if (dataBytes.length > maxData) { dataBytes = dataBytes.slice(0, maxData); }
-        var bits = [];
-        for(var i=0;i<dataBytes.length;i++){
-          for(var b=7;b>=0;b--) bits.push((dataBytes[i]>>b)&1);
-        }
-        while(bits.length < moduleCount*moduleCount - 64) bits.push(0);
-        var dirUp = true;
-        var x = moduleCount - 1;
-        var bitIndex = 0;
-        while(x > 0){
-          if (x == 6) x--;
-          for(var i=0;i<moduleCount;i++){
-            var yy = dirUp ? moduleCount -1 - i : i;
-            for(var col = 0; col < 2; col++){
-              var xx = x - col;
-              if (modules[yy][xx] === null){
-                modules[yy][xx] = (bits[bitIndex] === 1);
-                bitIndex++;
-                if (bitIndex >= bits.length) { bitIndex = bits.length; }
-              }
-            }
-          }
-          dirUp = !dirUp;
-          x -= 2;
-        }
-        for(var r=0;r<moduleCount;r++) for(var c=0;c<moduleCount;c++) if (modules[r][c] === null) modules[r][c] = false;
-        return {modules:modules, size:moduleCount};
+    (function(){
+      'use strict';
+
+      // Keep DOM references
+      const modalBackdrop = document.getElementById('modalBackdrop');
+      const bookingForm = document.getElementById('bookingForm');
+      const btnCancel = document.getElementById('btnCancel');
+      const btnConfirm = document.getElementById('btnConfirm');
+      const modalError = document.getElementById('modalError');
+
+      const formItemId = document.getElementById('formItemId');
+      const formItemType = document.getElementById('formItemType');
+      const formItemTitle = document.getElementById('formItemTitle');
+      const custName = document.getElementById('custName');
+      const custMobile = document.getElementById('custMobile');
+
+      const confirmation = document.getElementById('confirmation');
+      const confirmTitle = document.getElementById('confirmTitle');
+      const confirmMessage = document.getElementById('confirmMessage');
+      const confirmDetails = document.getElementById('confirmDetails');
+
+      // Utility: simple order id
+      function generateOrderId(prefix){
+        const t = Date.now().toString(36);
+        const r = Math.floor(Math.random()*900 + 100).toString(36);
+        return (prefix || 'ORD') + '-' + t + '-' + r;
       }
-      function toDataURL(text, size, margin, colorDark, colorLight) {
-        size = size || 300;
-        margin = (typeof margin === 'number') ? margin : 8;
-        colorDark = colorDark || '#000';
-        colorLight = colorLight || '#fff';
-        var mat = makeMatrix(text);
-        var moduleCount = mat.size;
-        var canvas = document.createElement('canvas');
-        var scale = Math.floor((size - margin*2) / moduleCount);
-        if (scale < 1) scale = 1;
-        var canvasSize = moduleCount * scale + margin*2;
-        canvas.width = canvasSize;
-        canvas.height = canvasSize;
-        var ctx = canvas.getContext('2d');
-        ctx.fillStyle = colorLight;
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = colorDark;
-        for(var r=0;r<moduleCount;r++){
-          for(var c=0;c<moduleCount;c++){
-            if (mat.modules[r][c]) {
-              ctx.fillRect(margin + c*scale, margin + r*scale, scale, scale);
-            }
-          }
-        }
-        return canvas.toDataURL('image/png');
+
+      // Open modal with item meta
+      function openModalFor(element) {
+        const el = element.closest('.item, .block') || element;
+        const itemId = el && el.dataset && (el.dataset.itemId || '') || '';
+        const itemType = el && el.dataset && (el.dataset.itemType || '') || '';
+        const itemTitle = el && el.dataset && (el.dataset.itemTitle || element.getAttribute('data-item-title') || '') || '';
+
+        formItemId.value = itemId;
+        formItemType.value = itemType;
+        formItemTitle.value = itemTitle || element.getAttribute('data-item-title') || '';
+
+        modalError.style.display = 'none';
+        custName.value = '';
+        custMobile.value = '';
+
+        // show modal
+        modalBackdrop.style.display = 'flex';
+        modalBackdrop.setAttribute('aria-hidden', 'false');
+        custName.focus();
       }
-      return { toDataURL: toDataURL };
+
+      // Close modal
+      function closeModal() {
+        modalBackdrop.style.display = 'none';
+        modalBackdrop.setAttribute('aria-hidden', 'true');
+        modalError.style.display = 'none';
+      }
+
+      // Basic mobile cleaning
+      function normalizeMobile(v){
+        return (v || '').replace(/[^\d\+]/g,'').trim();
+      }
+
+      // Add event listeners to open buttons
+      Array.prototype.slice.call(document.querySelectorAll('.open-booking')).forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openModalFor(btn);
+        });
+      });
+
+      // cancel
+      btnCancel.addEventListener('click', closeModal);
+
+      // close modal on backdrop click
+      modalBackdrop.addEventListener('click', function(e){
+        if (e.target === modalBackdrop) closeModal();
+      });
+
+      // Escape closes modal
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && modalBackdrop.style.display === 'flex') closeModal();
+      });
+
+      // Submit handler
+      bookingForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        modalError.style.display = 'none';
+        modalError.textContent = '';
+
+        const name = (custName.value || '').trim();
+        const mobileRaw = (custMobile.value || '').trim();
+        const mobile = normalizeMobile(mobileRaw);
+        const itemTitle = (formItemTitle.value || '').trim();
+
+        if (!name) {
+          modalError.textContent = 'Please enter your name.';
+          modalError.style.display = '';
+          custName.focus();
+          return;
+        }
+        if (!mobile || mobile.length < 7) {
+          modalError.textContent = 'Please enter a valid mobile number.';
+          modalError.style.display = '';
+          custMobile.focus();
+          return;
+        }
+
+        // Build booking record (client-side only)
+        const orderId = generateOrderId(itemTitle ? itemTitle.substring(0,3).toUpperCase() : 'BK');
+        const issuedAt = new Date().toISOString();
+
+        const booking = {
+          orderId: orderId,
+          itemTitle: itemTitle || 'Ticket',
+          name: name,
+          mobile: mobile,
+          issuedAt: issuedAt
+        };
+
+        // Render simple confirmation inline (no popups)
+        renderConfirmation(booking);
+
+        // Close modal
+        closeModal();
+
+        // Optionally: here you can POST to a server / save to local JSON via your Node server.
+        // Example: fetch('/save-booking', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(booking) })
+      });
+
+      // Render confirmation block
+      function renderConfirmation(booking){
+        confirmTitle.textContent = 'Booking confirmed';
+        confirmMessage.textContent = 'Your ticket is booked. Please collect it from the counter.';
+        confirmDetails.innerHTML = `
+          <strong>Order ID: </strong>${escapeHtml(booking.orderId)}<br>
+          <strong>Item: </strong>${escapeHtml(booking.itemTitle)}<br>
+          <strong>Name: </strong>${escapeHtml(booking.name)}<br>
+          <strong>Mobile: </strong>${escapeHtml(booking.mobile)}<br>
+          <span class="small">Issued: ${new Date(booking.issuedAt).toLocaleString()}</span>
+        `;
+        confirmation.style.display = 'block';
+        // accessible focus
+        confirmation.setAttribute('tabindex','-1');
+        confirmation.focus();
+      }
+
+      // Simple HTML escape
+      function escapeHtml(s){
+        if (!s) return '';
+        return String(s).replace(/[&<>"']/g, function(m){
+          return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m];
+        });
+      }
+
+      // Basic mobile input formatting for nicer UX (not required for validation)
+      custMobile.addEventListener('input', function(){
+        // Allow + and digits and spaces for readability, remove other chars
+        let v = custMobile.value;
+        v = v.replace(/[^\d\+\s\-]/g,'');
+        // collapse multiple spaces
+        v = v.replace(/\s{2,}/g,' ');
+        custMobile.value = v;
+      });
+
     })();
-    global.MinimalQR = qrcode;
-  })(this);
   </script>
-
-<script>
-(function(){
-  function $(sel, ctx){ return (ctx || document).querySelector(sel); }
-  function $all(sel, ctx){ return Array.from((ctx || document).querySelectorAll(sel)); }
-  function id(x){ return document.getElementById(x); }
-
-  const modalRoot = document.getElementById('modalRoot');
-  const modalBackdrop = id('modalBackdrop');
-  const modalForm = id('modalForm');
-  const modalAction = id('modalAction');
-  const modalItemId = id('modalItemId');
-  const modalItemTitle = id('modalItemTitle');
-  const modalTitleEl = id('modalTitle');
-  const extraFieldContainer = id('extraFieldContainer');
-  const extraLabel = id('extraLabel');
-  const extraInput = id('extraInput');
-  const modalError = id('modalError');
-
-  $all('.action-reserve').forEach(btn => btn.addEventListener('click', (e) => openModalFor(e.currentTarget, 'reserve')));
-  $all('.action-bookseat').forEach(btn => btn.addEventListener('click', (e) => openModalFor(e.currentTarget, 'bookseat')));
-  $all('.action-bookmovie').forEach(btn => btn.addEventListener('click', (e) => openModalFor(e.currentTarget, 'bookmovie')));
-
-  id('modalCancel').addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', function(e){
-    if (e.target === modalBackdrop) closeModal();
-  });
-
-  function openModalFor(target, actionType){
-    const parent = target.closest('[data-item-id], .movie, .book') || target.parentElement;
-    let itemId = parent && (parent.getAttribute('data-item-id') || parent.getAttribute('data-movie-id')) || '';
-    let title = target.getAttribute('data-title') || parent.querySelector('h3, strong')?.textContent?.trim() || '';
-    let date = target.getAttribute('data-date') || parent.getAttribute('data-movie-date') || '';
-
-    modalAction.value = actionType;
-    modalItemId.value = itemId || '';
-    modalItemTitle.value = title || '';
-
-    if (actionType === 'reserve'){
-      modalTitleEl.textContent = 'Reserve copy — ' + (title || '');
-      extraLabel.textContent = 'Quantity';
-      extraInput.type = 'number';
-      extraInput.min = 1;
-      extraInput.value = 1;
-      extraFieldContainer.style.display = '';
-    } else if (actionType === 'bookseat'){
-      modalTitleEl.textContent = 'Book seat — ' + (title || '');
-      extraLabel.textContent = 'Number of seats';
-      extraInput.type = 'number';
-      extraInput.min = 1;
-      extraInput.value = 1;
-      extraFieldContainer.style.display = '';
-    } else if (actionType === 'bookmovie'){
-      modalTitleEl.textContent = 'Book movie seat — ' + (title || '');
-      extraLabel.textContent = 'Number of seats';
-      extraInput.type = 'number';
-      extraInput.min = 1;
-      extraInput.value = 1;
-      extraFieldContainer.style.display = '';
-    } else {
-      modalTitleEl.textContent = 'Reserve / Book';
-      extraFieldContainer.style.display = 'none';
-    }
-
-    modalForm.reset();
-    modalError.style.display = 'none';
-    modalRoot.style.display = 'block';
-    // focus on name field
-    setTimeout(()=> id('name').focus(),120);
-  }
-
-  function closeModal(){ modalRoot.style.display = 'none'; }
-
-  function isValidEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-  function isValidPhone(phone){ const digits = phone.replace(/\D/g,''); return digits.length >= 7; }
-
-  // Helper: generate & download PDF ticket (uses jsPDF)
-  async function generateAndDownloadPDF(payload, qrDataUrl) {
-    try {
-      // ensure jsPDF loaded
-      if (!window.jspdf) {
-        // try to wait briefly
-        await new Promise((res) => setTimeout(res, 250));
-        if (!window.jspdf) {
-          console.warn('jsPDF not available — skipping PDF generation');
-          return false;
-        }
-      }
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-
-      // Layout constants
-      const left = 36;
-      let y = 40;
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const ticketW = pageWidth - left * 2;
-
-      // Header
-      doc.setFillColor(16,16,16);
-      doc.rect(left, y-8, ticketW, 70, 'F'); // header background
-      doc.setFontSize(20);
-      doc.setTextColor(255,106,0);
-      doc.text('Banasthali Halloween Carnival', left + 12, y + 10);
-      doc.setFontSize(10);
-      doc.setTextColor(200,200,200);
-      doc.text('Books & Movies — Official Ticket', left + 12, y + 30);
-      doc.setTextColor(255,255,255);
-      y += 72;
-
-      // Ticket box
-      doc.setDrawColor(0);
-      doc.setLineWidth(0.6);
-      doc.roundedRect(left, y, ticketW, 320, 6, 6);
-      const pad = 14;
-      let cx = left + pad;
-      let cy = y + pad;
-
-      // Left column: details
-      doc.setFontSize(12);
-      doc.setTextColor(34,34,34);
-      doc.text('Order ID:', cx, cy + 2);
-      doc.setFontSize(14);
-      doc.setTextColor(0);
-      doc.text(String(payload.orderId), cx + 80, cy + 2);
-
-      cy += 24;
-      doc.setFontSize(11);
-      doc.setTextColor(0);
-      doc.text('Item:', cx, cy);
-      doc.setFontSize(13);
-      doc.setTextColor(0);
-      doc.text(String(payload.itemTitle), cx + 80, cy);
-
-      cy += 20;
-      doc.setFontSize(11);
-      doc.text('Quantity / Seats:', cx, cy);
-      doc.setFontSize(13);
-      doc.text(String(payload.quantity), cx + 120, cy);
-
-      cy += 22;
-      doc.setFontSize(11);
-      doc.text('Name:', cx, cy);
-      doc.setFontSize(12);
-      doc.text(String(payload.name), cx + 80, cy);
-
-      cy += 18;
-      doc.setFontSize(11);
-      doc.text('Email:', cx, cy);
-      doc.setFontSize(12);
-      doc.text(String(payload.email), cx + 80, cy);
-
-      cy += 18;
-      doc.setFontSize(11);
-      doc.text('Phone:', cx, cy);
-      doc.setFontSize(12);
-      doc.text(String(payload.phone), cx + 80, cy);
-
-      cy += 30;
-      doc.setFontSize(10);
-      doc.setTextColor(120,120,120);
-      doc.text('Issued:', cx, cy);
-      doc.setFontSize(11);
-      doc.setTextColor(0);
-      doc.text(new Date(payload.issuedAt).toLocaleString(), cx + 56, cy);
-
-      // Right column: QR
-      const qrX = left + ticketW - pad - 160;
-      const qrY = y + pad;
-      if (qrDataUrl) {
-        try {
-          doc.addImage(qrDataUrl, 'PNG', qrX, qrY, 140, 140);
-        } catch (e) {
-          console.warn('Failed to embed QR in PDF', e);
-        }
-      } else {
-        doc.setFontSize(10);
-        doc.setTextColor(150,0,0);
-        doc.text('QR unavailable', qrX + 18, qrY + 80);
-      }
-
-      // Footer note and barcode-like line
-      doc.setFontSize(9);
-      doc.setTextColor(120);
-      doc.text('Present this ticket (printed or digital) at the collection point. Staff will scan the QR to validate.', left + 12, y + 280);
-
-      // Save file
-      const filename = `ticket-${String(payload.orderId).replace(/[^a-zA-Z0-9-_]/g,'')}.pdf`;
-      doc.save(filename);
-      return true;
-    } catch (err) {
-      console.error('PDF generation error', err);
-      return false;
-    }
-  }
-
-  // Main modal submit handler — now async so it can generate+download PDF before opening confirmation
-  modalForm.addEventListener('submit', async function(e){
-    e.preventDefault();
-    modalError.style.display = 'none';
-
-    const action = modalAction.value;
-    const itemId = modalItemId.value || '';
-    const title = modalItemTitle.value || '';
-    const name = id('name').value.trim();
-    const email = id('email').value.trim();
-    const phone = id('phone').value.trim();
-    const extra = (extraInput && extraInput.value) ? Number(extraInput.value) : 1;
-
-    if (!name || !email || !phone){
-      modalError.textContent = 'Please fill all required fields (name, email, phone).';
-      modalError.style.display = '';
-      return;
-    }
-    if (!isValidEmail(email)){
-      modalError.textContent = 'Please enter a valid email address.';
-      modalError.style.display = '';
-      return;
-    }
-    if (!isValidPhone(phone)){
-      modalError.textContent = 'Please enter a valid phone number.';
-      modalError.style.display = '';
-      return;
-    }
-
-    const orderId = (action === 'reserve' ? 'RESV-' : action === 'bookseat' ? 'SEAT-' : 'MOV-' ) + Date.now();
-    const now = new Date();
-    const issued = now.toISOString();
-
-    let itemLabel = title;
-    if (!itemLabel){
-      if (action === 'reserve') itemLabel = 'Book Item';
-      else if (action === 'bookseat') itemLabel = 'Event Seat';
-      else if (action === 'bookmovie') itemLabel = 'Movie Seat';
-    }
-    const extraLabelText = (action === 'reserve') ? 'Copies' : 'Seats';
-
-    const qrPayload = {
-      orderId: orderId,
-      action: action,
-      itemId: itemId,
-      itemTitle: itemLabel,
-      quantity: extra,
-      name: name,
-      email: email,
-      phone: phone,
-      issuedAt: issued
-    };
-
-    // Generate QR data URL (offline)
-    let qrDataUrl = '';
-    try {
-      qrDataUrl = MinimalQR.toDataURL(JSON.stringify(qrPayload), 280);
-    } catch (err) {
-      console.error('QR generation failed', err);
-      qrDataUrl = '';
-    }
-
-    // Generate & download PDF ticket (automatically)
-    try {
-      await generateAndDownloadPDF(qrPayload, qrDataUrl);
-    } catch (err) {
-      console.warn('PDF download attempt failed:', err);
-    }
-
-    // Build confirmation HTML (with embedded QR and a Download button)
-    // To keep the confirmation page self-contained we embed the QR via encodeURIComponent
-    const encodedQR = encodeURIComponent(qrDataUrl || '');
-    const confirmationHtml = `
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Confirmation — ${escapeHtml(itemLabel)}</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body { font-family: "Trebuchet MS", Arial, sans-serif; margin:0; padding:24px; background:#fff; color:#111; }
-    .box { max-width:760px; margin:0 auto; border:1px solid #ddd; padding:18px; border-radius:10px; }
-    h1 { margin:0 0 8px 0; color:#ff6a00; font-size:22px; }
-    .muted { color:#666; margin-top:6px; }
-    .grid { display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; align-items:start; }
-    .col { flex:1 1 220px; }
-    .label { font-size:12px; color:#777; }
-    .value { font-weight:700; margin-top:6px; }
-    .actions { margin-top:18px; display:flex; gap:10px; justify-content:flex-end; }
-    .btn { background:#ff6a00; color:#111; padding:10px 14px; border:none; border-radius:8px; font-weight:800; cursor:pointer; }
-    .btn.secondary { background:#eee; color:#111; border:1px solid #ccc; }
-    .note { margin-top:12px; color:#444; font-size:0.95rem; }
-    .qr-wrap { flex:0 0 200px; text-align:center; }
-    .qr-wrap img { max-width:100%; height:auto; border:1px solid #ddd; background:#fff; padding:6px; }
-    pre{ background:#f7f7f7; padding:10px; border-radius:6px; overflow:auto; color:#222; }
-    @media (max-width:620px){ .grid { flex-direction:column; } .actions { flex-direction:column-reverse; } .qr-wrap { order:-1; } }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <h1>Reservation Confirmed</h1>
-    <div class="muted">Thank you — your ${escapeHtml(action === 'reserve' ? 'reservation' : action === 'bookseat' ? 'seat booking' : 'movie booking')} is recorded.</div>
-
-    <div class="grid" style="margin-top:16px;">
-      <div class="col">
-        <div class="label">Order ID</div>
-        <div class="value">${escapeHtml(orderId)}</div>
-
-        <div style="margin-top:12px;">
-          <div class="label">Item</div>
-          <div class="value">${escapeHtml(itemLabel)}</div>
-        </div>
-
-        <div style="margin-top:12px;">
-          <div class="label">${escapeHtml(extraLabelText)}</div>
-          <div class="value">${escapeHtml(String(extra))}</div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="label">Name</div>
-        <div class="value">${escapeHtml(name)}</div>
-
-        <div style="margin-top:12px;">
-          <div class="label">Email</div>
-          <div class="value">${escapeHtml(email)}</div>
-        </div>
-
-        <div style="margin-top:12px;">
-          <div class="label">Phone</div>
-          <div class="value">${escapeHtml(phone)}</div>
-        </div>
-      </div>
-
-      <div class="qr-wrap" aria-hidden="${qrDataUrl ? 'false' : 'true'}">
-        <div class="label">Scan to verify</div>
-        ${ qrDataUrl ? `<img id="confirmQr" src="${qrDataUrl}" alt="Booking QR code">` : '<div style="color:#a00; margin-top:10px;">QR generation failed</div>' }
-      </div>
-    </div>
-
-    <div class="note">
-      <p>Please bring this confirmation (printed or on your phone) when you collect your copy / arrive for the event. Staff can scan the QR for quick verification. This is a demo confirmation generated in the browser — for production, keep a server-side record and sign QR payloads to prevent forging.</p>
-      <pre style="margin-top:8px;">Issued: ${escapeHtml(new Date(issued).toLocaleString())}</pre>
-    </div>
-
-    <div class="actions">
-      <button id="downloadBtn" class="btn">Download Ticket (PDF)</button>
-      <button class="btn secondary" onclick="window.print()">Print / Save as PDF</button>
-      <button class="btn secondary" onclick="window.close()">Close</button>
-    </div>
-  </div>
-
-  <script>
-    // recreate qrDataUrl inside confirmation window
-    const qrDataUrl = decodeURIComponent("${encodeURIComponent(qrDataUrl || '')}");
-    const payload = ${JSON.stringify(qrPayload)};
-    async function downloadTicket() {
-      try {
-        if (!window.jspdf) {
-          // load jsPDF dynamically if not present
-          const s = document.createElement('script');
-          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-          document.head.appendChild(s);
-          await new Promise((res)=>{ s.onload = res; s.onerror = res; });
-        }
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-        const left = 36;
-        let y = 40;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const ticketW = pageWidth - left * 2;
-
-        doc.setFillColor(16,16,16);
-        doc.rect(left, y-8, ticketW, 70, 'F');
-        doc.setFontSize(20);
-        doc.setTextColor(255,106,0);
-        doc.text('Banasthali Halloween Carnival', left + 12, y + 10);
-        doc.setFontSize(10);
-        doc.setTextColor(200,200,200);
-        doc.text('Books & Movies — Official Ticket', left + 12, y + 30);
-        y += 72;
-
-        doc.roundedRect(left, y, ticketW, 320, 6, 6);
-        const pad = 14;
-        let cx = left + pad;
-        let cy = y + pad;
-
-        doc.setFontSize(12);
-        doc.setTextColor(34,34,34);
-        doc.text('Order ID:', cx, cy + 2);
-        doc.setFontSize(14);
-        doc.setTextColor(0);
-        doc.text(String(payload.orderId), cx + 80, cy + 2);
-
-        cy += 24;
-        doc.setFontSize(11);
-        doc.setTextColor(0);
-        doc.text('Item:', cx, cy);
-        doc.setFontSize(13);
-        doc.setTextColor(0);
-        doc.text(String(payload.itemTitle), cx + 80, cy);
-
-        cy += 20;
-        doc.setFontSize(11);
-        doc.text('Quantity / Seats:', cx, cy);
-        doc.setFontSize(13);
-        doc.text(String(payload.quantity), cx + 120, cy);
-
-        cy += 22;
-        doc.setFontSize(11);
-        doc.text('Name:', cx, cy);
-        doc.setFontSize(12);
-        doc.text(String(payload.name), cx + 80, cy);
-
-        cy += 18;
-        doc.setFontSize(11);
-        doc.text('Email:', cx, cy);
-        doc.setFontSize(12);
-        doc.text(String(payload.email), cx + 80, cy);
-
-        cy += 18;
-        doc.setFontSize(11);
-        doc.text('Phone:', cx, cy);
-        doc.setFontSize(12);
-        doc.text(String(payload.phone), cx + 80, cy);
-
-        const qrX = left + ticketW - pad - 160;
-        const qrY = y + pad;
-        if (qrDataUrl) {
-          try { doc.addImage(qrDataUrl, 'PNG', qrX, qrY, 140, 140); } catch(e){ console.warn('embed QR failed', e); }
-        }
-
-        doc.setFontSize(9);
-        doc.setTextColor(120);
-        doc.text('Present this ticket (printed or digital) at the collection point. Staff will scan the QR to validate.', left + 12, y + 280);
-
-        const filename = `ticket-${String(payload.orderId).replace(/[^a-zA-Z0-9-_]/g,'')}.pdf`;
-        doc.save(filename);
-      } catch (err) {
-        console.error('Download failed', err);
-        alert('Unable to generate PDF in this browser.');
-      }
-    }
-
-    document.getElementById('downloadBtn').addEventListener('click', downloadTicket);
-    // If automatic download already happened, this still provides a manual download option
-  </script>
-
-</body>
-</html>
-    `.trim();
-
-    // open confirmation page
-    const w = window.open('', '_blank', 'noopener,noreferrer');
-    if (!w) {
-      alert('Popup blocked. Please allow popups to see the confirmation page.');
-      return;
-    }
-    w.document.open();
-    w.document.write(confirmationHtml);
-    w.document.close();
-
-    // close modal
-    closeModal();
-  });
-
-  function escapeHtml(s){
-    if (s === undefined || s === null) return '';
-    return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
-  }
-})();
-</script>
 </body>
 </html>
