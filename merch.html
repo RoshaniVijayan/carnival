@@ -1,483 +1,479 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Merch - Halloween Carnival Banasthali</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Merchandise - Halloween Carnival Banasthali</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { margin:0; font-family:"Trebuchet MS", sans-serif; background:#0d0d0d; color:#f8f8f8; }
-    header { background:#111; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-    header h1 { margin:0; color:#ff6a00; font-size:1.05rem; }
-    nav a { color:#fff; text-decoration:none; margin-left:1rem; font-weight:bold; }
-    .top-right { display:flex; align-items:center; gap:0.8rem; }
-    .cart-btn { background:#ff6a00; color:#111; padding:0.45rem 0.7rem; border-radius:6px; font-weight:bold; text-decoration:none; cursor:pointer; border:none; position:relative; }
-    .cart-count { background:#111; color:#fff; padding:0.15rem 0.5rem; border-radius:6px; font-weight:bold; margin-left:6px; display:inline-block; transform-origin:center; }
-
-    /* badge pulse animation */
-    .cart-count.bump {
-      animation: bump .45s cubic-bezier(.2,.8,.2,1);
-    }
-    @keyframes bump {
-      0% { transform: scale(1); }
-      30% { transform: scale(1.3); }
-      60% { transform: scale(0.95); }
-      100% { transform: scale(1); }
+    :root {
+      --bg: #0d0d0d;
+      --card: #151515;
+      --panel: #1a1a1a;
+      --text: #fff;
+      --accent: #ff6a00;     
+      --box-shadow-color: #ff6a00;  
+      --offwhite: #e0e0e0;
     }
 
-    .grid { max-width:1000px; margin:2rem auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; padding:0 1rem; }
-    .card { background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a00aa; text-align:center; display:flex; flex-direction:column; gap:0.6rem; }
-    .card img { width:100%; height:150px; object-fit:cover; border-radius:6px; }
-    .price { margin-top:0.2rem; font-weight:bold; }
-    .buy { margin-top:0.6rem; display:inline-block; text-decoration:none; padding:0.5rem 0.8rem; border-radius:6px; background:#ff6a00; color:#111; font-weight:bold; cursor:pointer; border:none; }
-    footer { text-align:center; padding:1rem; background:#0b0b0b; color:rgb(255,0,0); margin-top:2rem; }
-
-    /* Cart drawer */
-    .cart-drawer { position:fixed; right:0; top:0; height:100vh; width:360px; max-width:100%; background:#0f0f0f; box-shadow:-8px 0 24px rgba(0,0,0,0.7); transform:translateX(100%); transition:transform .22s ease; z-index:1200; display:flex; flex-direction:column; }
-    .cart-drawer.open { transform:translateX(0); }
-    .cart-header { padding:1rem; border-bottom:1px solid #222; display:flex; align-items:center; justify-content:space-between; }
-    .cart-body { padding:1rem; overflow:auto; flex:1; }
-    .cart-item { display:flex; gap:0.6rem; margin-bottom:0.8rem; align-items:center; }
-    .cart-item img { width:64px; height:64px; object-fit:cover; border-radius:6px; }
-    .cart-item .meta { flex:1; }
-    .qty-controls { display:flex; gap:0.4rem; align-items:center; margin-top:0.4rem; }
-    .qty-controls button { padding:0.25rem 0.5rem; border-radius:4px; background:#222; color:#fff; border:1px solid #333; cursor:pointer; }
-    .cart-footer { padding:1rem; border-top:1px solid #222; }
-    .muted { color:#cfcfcf; font-size:0.94rem; }
-    .empty { text-align:center; color:#999; padding:2rem 1rem; }
-    @media (max-width:640px){
-      header { flex-direction:column; align-items:flex-start; gap:0.6rem; }
-      .cart-drawer { width:100%; }
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
     }
 
-    /* flying image animation styles */
-    .flying-img {
-      position:fixed;
-      width:64px;
-      height:64px;
-      object-fit:cover;
-      border-radius:6px;
-      z-index:2000;
-      pointer-events:none;
-      transition: transform 700ms cubic-bezier(.2,.8,.2,1), opacity 700ms linear;
-      will-change: transform, opacity;
+    h1, h2, h3 {
+      font-family: inherit;
     }
 
-    /* Confirmation modal */
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:2000; }
-    .modal-backdrop.open { display:flex; }
-    .modal { background:#0f0f0f; border-radius:10px; padding:18px; width:92%; max-width:420px; box-shadow:0 8px 30px rgba(0,0,0,0.6); color:#fff; }
-    .modal h3 { margin:0 0 8px 0; color:#ff6a00; }
-    .modal .muted { color:#cfcfcf; margin-top:6px; }
-    .modal .buttons { margin-top:14px; display:flex; gap:10px; justify-content:flex-end; }
-    .btn { background:#ff6a00; color:#111; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
-    .btn.secondary { background:#222; color:#fff; border:1px solid #333; }
-    .modal small { display:block; margin-top:8px; color:#bdbdbd; }
+    /* Navigation */
+    header {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        background: rgba(17,17,17,0.5);
+        backdrop-filter: blur(8px);
+        border-radius: 12px;
+        box-shadow: 0 0 15px var(--box-shadow-color);
+        z-index: 10;
+        width: fit-content;
+    }
+
+    header nav {
+        display: flex;
+        gap: 10px;
+    }
+
+    header nav a {
+        margin-left: 10px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    header nav a:hover {
+        color: var(--accent);
+        transform: scale(1.05);
+    }
+
+    .cart-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff6a00;
+        color: #000000;
+        font-size: 1rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 18px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .cart-button:hover {
+        background: #ff6600;
+        transform: scale(1.05);
+    }
+
+    .cart-button,
+    .merch-card button {
+      font-family: inherit;
+    }
+
+    /* Section container */
+    section {
+      background: var(--panel);
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 1000px;
+      box-shadow: 0 0 25px var(--accent);
+    }
+
+    section h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-align: center;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    /* Merch grid */
+    .merch-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
+      gap: 3rem;
+      justify-content: center;
+    }
+
+    .merch-card-wrapper {
+      display: flex;
+      justify-content: center;
+      overflow: visible; /* allow scaling outside grid */
+    }
+
+    .merch-card {
+      background: var(--panel);
+      padding: 0.8rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 20px var(--accent);
+      transition: transform 0.2s, box-shadow 0.2s; 
+      margin: 20px 10px 20px 10px;
+    }
+
+    .merch-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px var(--accent);
+    }
+
+    .merch-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .merch-card h3 {
+      margin: 0.5rem 0;
+      color: var(--accent);
+    }
+
+    .merch-card p {
+      color: var(--offwhite);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .merch-card button {
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #000000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .merch-card button:hover {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    .price {
+      display: block;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-shadow: 1px 1px 4px #000;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Vendor inquiry box */
+    .vendor-box {
+        margin: 4rem auto;
+        padding: 2rem;
+        border-radius: 16px;
+        background: rgba(26, 26, 26, 0.95);
+        box-shadow: 0 0 25px var(--accent);
+        text-align: center;
+        max-width: 1000px;
+    }
+
+    .vendor-box h2 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+
+    .vendor-box p {
+      color: var(--offwhite);
+      margin-bottom: 0;
+    }
+
+    .vendor-box a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.2s ease, color 0.3s ease;
+    }
+
+    .vendor-box a:hover {
+        color: var(--accent);
+        transform: scale(1.05);
+    }
+
+    /* Sliding Cart Panel */
+    .cart-panel {
+      position: fixed;
+      top: 0;
+      right: -25%; /* hidden off-screen initially */
+      width: 25%;
+      height: 100%;
+      background: var(--panel);
+      transition: right 0.3s ease;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-panel.open {
+      right: 0; /* slide into view */
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+    }
+
+    .cart-header h2 {
+      font-size: 1.2rem;
+      margin: 0;
+      color: var(--accent);
+    }
+
+    .cart-buttons {
+      display: flex;
+      gap: 0.5rem; /* space between checkout and clear cart */
+    }
+
+    #checkoutBtn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.3s;
+      font-family: inherit;
+    }
+
+    #checkoutBtn:hover {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    #clearCartBtn {
+      background: var(--card);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.3s;
+      font-family: inherit;
+    }
+
+    #clearCartBtn:hover {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    #closeCart {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .cart-footer {
+      display: flex;
+      justify-content: space-between; /* total left, button right */
+      align-items: center;
+      padding: 1rem;
+      border-top: 1px solid #444;
+      color: var(--text);
+    }
+
+    /* Footer */
+    footer {
+        color: red;
+        background: #111;
+        text-align: center;
+        padding: 1rem;
+        font-size: 0.9rem;
+        margin-top: 3rem;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div style="display:flex; align-items:center; gap:0.8rem;">
-      <h1>🎃 Carnival Merch</h1>
-      <nav aria-label="main menu">
-        <a href="index.html">Home</a>
-        <a href="tickets.html">Tickets</a>
-        <a href="book-movie.html">Books & Movies</a>
-        <a href="merch.html">Merch</a>
-      </nav>
-    </div>
 
-    <div class="top-right">
-      <button id="open-cart" class="cart-btn" aria-haspopup="dialog" aria-expanded="false">
-        Cart <span id="cart-count" class="cart-count">0</span>
-      </button>
-    </div>
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <a href="index.html">🎃 Home</a>
+      <a href="tickets.html">Tickets</a>
+      <a href="book-movie.html">Movies & Books</a>
+    </nav>
   </header>
 
-  <main>
-    <div style="max-width:1000px; margin:1.5rem auto; padding:0 1rem;">
-      <h2 style="color:#ff6a00; text-align:left;">Official Carnival Merchandise</h2>
-      <p class="muted">Pickup at Merch Stall M1 or select delivery at checkout (delivery not available in demo).</p>
+  <button class="cart-button">🛒 Cart</button>
 
-      <div id="products" class="grid" aria-live="polite">
-        <!-- Products injected by JS from JSON below -->
-      </div>
-
-      <section style="margin-top:1rem; background:#1a1a1a; padding:1rem; border-radius:8px; box-shadow:0 0 12px #ff6a0066;">
-        <h3 style="color:#ff6a00;">Vendor & Custom Merch Inquiries</h3>
-        <p class="muted">To set up a merch stall or request custom branding, email merch@banasthali-carnival.example (replace with real contact).</p>
-      </section>
-    </div>
-  </main>
-
-  <!-- Cart drawer (initially hidden) -->
-  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping cart">
+  <div class="cart-panel" id="cartPanel">
     <div class="cart-header">
-      <strong style="color:#ff6a00;">Your Cart</strong>
-      <div>
-        <button id="clear-cart" style="background:#222;color:#fff;border:1px solid #333;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;">Clear</button>
-        <button id="close-cart" style="background:#ff6a00;color:#111;border:none;padding:0.4rem 0.6rem;border-radius:6px;margin-left:0.5rem;cursor:pointer;">Close</button>
-      </div>
+      <h2>🛒 Your Cart</h2>
+      <button id="closeCart">✖</button>
     </div>
-
-    <div class="cart-body" id="cartBody">
-      <!-- items -->
-    </div>
-
-    <div class="cart-footer" id="cartFooter">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-        <div class="muted">Subtotal</div>
-        <div id="cartTotal" style="font-weight:bold;">₹0</div>
-      </div>
-
-      <div style="display:flex; gap:0.6rem;">
-        <!-- Checkout now shows confirmation modal before redirect -->
-        <button id="checkout" class="cart-btn" style="flex:1;">Checkout</button>
-        <button id="continue" style="flex:1; background:#222;color:#fff;border:1px solid #333;padding:0.5rem;border-radius:6px;cursor:pointer;">Continue Shopping</button>
-      </div>
-      <div style="margin-top:0.6rem;" class="muted">Note: This is a demo cart. Integrate with a payment gateway for real orders.</div>
-    </div>
-  </aside>
-
-  <!-- Confirmation modal -->
-  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" style="display:none;">
-    <div class="modal" role="document" aria-labelledby="modalTitle">
-      <h3 id="modalTitle">Proceed to payment?</h3>
-      <div id="modalBody" class="muted">
-        <!-- subtotal inserted here -->
-      </div>
-      <small>Click Proceed to go to the secure checkout page.</small>
-      <div class="buttons" style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px;">
-        <button id="modalCancel" class="btn secondary">Cancel</button>
-        <button id="modalProceed" class="btn">Proceed</button>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <strong>Total: ₹<span id="cartTotal">0</span></strong>
+      <div class="cart-buttons">
+        <button id="checkoutBtn">Checkout</button>
+        <button id="clearCartBtn">Clear Cart</button>
       </div>
     </div>
   </div>
 
-  <footer>&copy; 2025 Banasthali Halloween Carnival | All Rights Reserved</footer>
+  <!-- Slide-in Cart Panel -->
+  <div class="cart-panel" id="cartPanel">
+    <h2>Your Cart</h2>
+    <p>Cart is empty for now.</p>
+    <button class="close-cart" id="closeCart">Close</button>
+  </div>
+
+  <!-- Page Heading -->
+  <h1 style="text-align: center; color: var(--accent); text-shadow: 2px 2px 8px #000; margin: 5rem 0 0.5rem 0;">
+      Official Merchandise 🛍️
+  </h1>
+
+  <p style="text-align: center; color: #ffffffc5; font-size: 1rem; margin: 0 0 2rem 0;">
+      Grab exclusive Halloween Carnival merch — from spooky tees to collectible mugs. Limited stock, don’t miss out!
+  </p>
+
+  <!-- Merch Items -->
+  <section>
+    <h2>🎁 Featured Items</h2>
+    <div class="merch-list">
+      <div class="merch-card-wrapper fade-in">
+        <div class="merch-card">
+          <img src="tshirt.webp" alt="Halloween Carnival T-Shirt">
+          <h3>Carnival T-Shirt</h3>
+          <p>Black tee with spooky pumpkin print. Sizes S–XL.</p>
+          <span class="price">₹499</span>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+      <div class="merch-card-wrapper fade-in">
+        <div class="merch-card">
+          <img src="mug.jpg" alt="Halloween Carnival Mug">
+          <h3>Spooky Mug</h3>
+          <p>Ceramic mug with glow-in-dark carnival logo.</p>
+          <span class="price">₹399</span>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+      <div class="merch-card-wrapper fade-in">
+        <div class="merch-card">
+          <img src="cap.jpg" alt="Halloween Carnival Cap">
+          <h3>Festival Cap</h3>
+          <p>Black baseball cap with embroidered skull logo.</p>
+          <span class="price">₹199</span>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vendor Box -->
+  <section class="vendor-box">
+      <h2>Vendor & Custom Merch Inquiries</h2>
+      <p>
+          To set up a merch stall or request custom branding, email 
+          <a href="mailto:merch@banasthali-carnival.example">
+          merch@banasthali-carnival.in
+          </a>
+      </p>
+  </section>
+  
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    &copy; 2025 Banasthali Halloween Carnival | All Rights Reserved
+  </footer>
 
   <script>
-    // --- Static JSON products (simple catalog) ---
-    const PRODUCTS = [
-      { id: "tshirt", title: "Event T-shirt", price: 399, img: "merch-tshirt.jpg", desc: "Official carnival T-shirt (cotton)." },
-      { id: "mug", title: "Haunted Mug", price: 249, img: "merch-mug.jpg", desc: "Ceramic mug with festival print." },
-      { id: "mask", title: "Souvenir Mask", price: 149, img: "merch-mask.jpg", desc: "Reusable festival mask." },
-      { id: "badge", title: "Collector Badge", price: 99, img: "merch-badge.jpg", desc: "Limited edition enamel badge." }
-    ];
+    const faders = document.querySelectorAll('.fade-in');
 
-    // --- Cart state (stored in localStorage) ---
-    const STORAGE_KEY = 'carnival_cart_v1';
-    function loadCart() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return {};
-        return JSON.parse(raw);
-      } catch (e) {
-        console.error('Failed to parse cart from storage', e);
-        return {};
-      }
-    }
-    function saveCart(cart) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-      renderCartCount();
-    }
+    const appearOptions = { threshold: 0.1 };
 
-    // cart is object: { productId: qty, ... }
-    let cart = loadCart();
-
-    // --- Render products to page ---
-    const productsContainer = document.getElementById('products');
-    function renderProducts() {
-      productsContainer.innerHTML = '';
-      PRODUCTS.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img class="prod-img" src="${p.img}" alt="${p.title}" onerror="this.style.objectFit='contain'; this.src='https://via.placeholder.com/320x150?text=${encodeURIComponent(p.title)}'">
-          <h3 style="color:#ff6a00; margin:0.2rem 0 0.2rem 0;">${p.title}</h3>
-          <div class="muted" style="font-size:0.95rem;">${p.desc}</div>
-          <div class="price">₹${p.price}</div>
-          <div style="margin-top:auto;">
-            <button class="buy" data-id="${p.id}">Add to cart</button>
-          </div>
-        `;
-        productsContainer.appendChild(card);
+    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       });
+    }, appearOptions);
 
-      // wire up add buttons
-      document.querySelectorAll('.buy').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-          const id = ev.currentTarget.getAttribute('data-id');
-          const card = ev.currentTarget.closest('.card');
-          const img = card ? card.querySelector('.prod-img') : null;
-          addToCart(id, 1, img);
-        });
+    faders.forEach(fader => { appearOnScroll.observe(fader); });
+
+    const cartButton = document.querySelector('.cart-button');
+    const cartPanel = document.getElementById('cartPanel');
+    const closeCart = document.getElementById('closeCart');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+
+    cartButton.addEventListener('click', () => cartPanel.classList.add('open'));
+    closeCart.addEventListener('click', () => cartPanel.classList.remove('open'));
+
+    const merchCards = document.querySelectorAll('.merch-card');
+    let total = 0;
+
+    merchCards.forEach(card => {
+      const button = card.querySelector('button');
+      const price = parseInt(card.querySelector('.price').textContent.replace('₹',''));
+
+      button.addEventListener('click', () => {
+        const itemName = card.querySelector('h3').textContent;
+        const cartItem = document.createElement('div');
+        cartItem.textContent = `${itemName} - ₹${price}`;
+        cartItems.appendChild(cartItem);
+        total += price;
+        cartTotal.textContent = total;
       });
-    }
-
-    // --- Cart functions ---
-    function addToCart(productId, qty = 1, productImageEl = null) {
-      qty = Number(qty);
-      if (!qty || qty < 1) return;
-      cart[productId] = (cart[productId] || 0) + qty;
-      saveCart(cart);
-      // visual feedback: badge pulse + flying image
-      animateBadge();
-      if (productImageEl) flyToCart(productImageEl);
-    }
-
-    function setQty(productId, qty) {
-      qty = Number(qty);
-      if (!qty || qty < 1) {
-        delete cart[productId];
-      } else {
-        cart[productId] = qty;
-      }
-      saveCart(cart);
-      renderCart();
-    }
-
-    function removeItem(productId) {
-      delete cart[productId];
-      saveCart(cart);
-      renderCart();
-    }
-
-    function clearCart() {
-      cart = {};
-      saveCart(cart);
-      renderCart();
-    }
-
-    // compute totals using integer arithmetic to avoid float quirks
-    function computeTotals() {
-      let subtotal = 0;
-      for (const [pid, qty] of Object.entries(cart)) {
-        const prod = PRODUCTS.find(x => x.id === pid);
-        if (!prod) continue;
-        subtotal += prod.price * Number(qty);
-      }
-      return { subtotal };
-    }
-
-    // --- Cart UI rendering ---
-    const cartDrawer = document.getElementById('cartDrawer');
-    const cartBody = document.getElementById('cartBody');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const cartCountEl = document.getElementById('cart-count');
-    const openCartBtn = document.getElementById('open-cart');
-    const closeCartBtn = document.getElementById('close-cart');
-    const clearCartBtn = document.getElementById('clear-cart');
-    const checkoutBtn = document.getElementById('checkout');
-    const continueBtn = document.getElementById('continue');
-
-    function renderCart() {
-      cartBody.innerHTML = '';
-      const keys = Object.keys(cart);
-      if (keys.length === 0) {
-        cartBody.innerHTML = '<div class="empty">Your cart is empty.</div>';
-        cartTotalEl.textContent = '₹0';
-        renderCartCount();
-        return;
-      }
-
-      keys.forEach(pid => {
-        const qty = cart[pid];
-        const prod = PRODUCTS.find(p => p.id === pid);
-        if (!prod) return;
-        const item = document.createElement('div');
-        item.className = 'cart-item';
-        item.innerHTML = `
-          <img src="${prod.img}" alt="${prod.title}" onerror="this.src='https://via.placeholder.com/64?text=+'">
-          <div class="meta">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div>
-                <div style="font-weight:bold;">${prod.title}</div>
-                <div class="muted" style="font-size:0.92rem;">₹${prod.price} each</div>
-              </div>
-              <div style="text-align:right;">₹${prod.price * qty}</div>
-            </div>
-            <div class="qty-controls">
-              <button class="qty-dec" data-id="${pid}">-</button>
-              <div style="min-width:30px; text-align:center;">${qty}</div>
-              <button class="qty-inc" data-id="${pid}">+</button>
-              <button class="remove" data-id="${pid}" style="margin-left:auto; background:transparent; border:1px solid #333; padding:0.25rem 0.4rem; border-radius:4px; color:#fff; cursor:pointer;">Remove</button>
-            </div>
-          </div>
-        `;
-        cartBody.appendChild(item);
-      });
-
-      // wire up item buttons
-      cartBody.querySelectorAll('.qty-inc').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          setQty(id, (cart[id] || 0) + 1);
-        });
-      });
-      cartBody.querySelectorAll('.qty-dec').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          const newQty = (cart[id] || 0) - 1;
-          setQty(id, newQty);
-        });
-      });
-      cartBody.querySelectorAll('.remove').forEach(btn => {
-        btn.addEventListener('click', () => {
-          removeItem(btn.getAttribute('data-id'));
-        });
-      });
-
-      const totals = computeTotals();
-      cartTotalEl.textContent = '₹' + totals.subtotal;
-      renderCartCount();
-    }
-
-    function renderCartCount() {
-      const count = Object.values(cart).reduce((s, q) => s + Number(q), 0);
-      cartCountEl.textContent = count;
-    }
-
-    // --- Drawer controls ---
-    function openCart() {
-      cartDrawer.classList.add('open');
-      cartDrawer.setAttribute('aria-hidden', 'false');
-      openCartBtn.setAttribute('aria-expanded', 'true');
-      renderCart();
-    }
-    function closeCart() {
-      cartDrawer.classList.remove('open');
-      cartDrawer.setAttribute('aria-hidden', 'true');
-      openCartBtn.setAttribute('aria-expanded', 'false');
-    }
-
-    openCartBtn.addEventListener('click', () => {
-      if (cartDrawer.classList.contains('open')) closeCart(); else openCart();
-    });
-    closeCartBtn.addEventListener('click', closeCart);
-    clearCartBtn.addEventListener('click', () => {
-      if (confirm('Clear cart?')) clearCart();
-    });
-    continueBtn.addEventListener('click', closeCart);
-
-    // --- Animation helpers ---
-
-    // badge pulse animation: add class then remove after animationend
-    function animateBadge() {
-      cartCountEl.classList.remove('bump');
-      // force reflow to restart animation
-      void cartCountEl.offsetWidth;
-      cartCountEl.classList.add('bump');
-      // safe removal after animation
-      setTimeout(() => cartCountEl.classList.remove('bump'), 600);
-    }
-
-    // fly a small cloned image from product to cart button
-    function flyToCart(sourceImgEl) {
-      if (!sourceImgEl) return;
-      const imgRect = sourceImgEl.getBoundingClientRect();
-      const cartRect = openCartBtn.getBoundingClientRect();
-
-      // create clone
-      const clone = sourceImgEl.cloneNode(true);
-      clone.className = 'flying-img';
-      // place at source position
-      clone.style.left = imgRect.left + 'px';
-      clone.style.top = imgRect.top + 'px';
-      clone.style.width = imgRect.width + 'px';
-      clone.style.height = imgRect.height + 'px';
-      clone.style.opacity = '1';
-      document.body.appendChild(clone);
-
-      // compute target center (cart button center)
-      const targetX = cartRect.left + cartRect.width / 2 - (imgRect.width / 2);
-      const targetY = cartRect.top + cartRect.height / 2 - (imgRect.height / 2);
-
-      // small delay so initial style applies
-      requestAnimationFrame(() => {
-        // scale down while moving
-        clone.style.transform = `translate(${targetX - imgRect.left}px, ${targetY - imgRect.top}px) scale(0.2)`;
-        clone.style.opacity = '0.6';
-      });
-
-      // remove after animation finishes
-      setTimeout(() => {
-        clone.style.opacity = '0';
-        // small delay to let fade complete
-        setTimeout(() => {
-          if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
-        }, 150);
-      }, 750);
-    }
-
-    // init page
-    renderProducts();
-    renderCart();
-
-    // --- Confirmation modal logic ---
-
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modalBody = document.getElementById('modalBody');
-    const modalCancel = document.getElementById('modalCancel');
-    const modalProceed = document.getElementById('modalProceed');
-
-    function showConfirmModal() {
-      const totals = computeTotals();
-      const subtotal = totals.subtotal;
-      modalBody.innerHTML = `<div>Subtotal: <strong>₹${subtotal}</strong></div>
-        <div class="muted" style="margin-top:6px;">Proceed to payment on the secure checkout page.</div>`;
-      modalBackdrop.style.display = 'flex';
-      modalBackdrop.classList.add('open');
-      modalBackdrop.setAttribute('aria-hidden', 'false');
-      // trap focus on modal proceed button for quick keyboard action
-      modalProceed.focus();
-    }
-
-    function hideConfirmModal() {
-      modalBackdrop.classList.remove('open');
-      modalBackdrop.style.display = 'none';
-      modalBackdrop.setAttribute('aria-hidden', 'true');
-    }
-
-    // Open modal when checkout clicked
-    if (checkoutBtn) {
-      checkoutBtn.addEventListener('click', () => {
-        // if cart empty, show alert and keep drawer open
-        const totals = computeTotals();
-        if (totals.subtotal === 0) {
-          alert('Cart is empty. Add items before checkout.');
-          return;
-        }
-        showConfirmModal();
-      });
-    }
-
-    // Modal controls
-    modalCancel.addEventListener('click', hideConfirmModal);
-
-    modalProceed.addEventListener('click', () => {
-      // redirect to checkout.html
-      // small safety: store last subtotal in sessionStorage for checkout page reference
-      const totals = computeTotals();
-      sessionStorage.setItem('carnival_last_subtotal', String(totals.subtotal));
-      // navigate
-      window.location.href = 'checkout.html';
     });
 
-    // close modal when clicking backdrop outside dialog
-    modalBackdrop.addEventListener('click', (ev) => {
-      if (ev.target === modalBackdrop) hideConfirmModal();
+    document.getElementById("clearCartBtn").addEventListener("click", () => {
+      // Remove all items in cart
+      const cartItems = document.querySelector(".cart-items");
+      cartItems.innerHTML = "";
+
+      // Reset total
+      const totalElem = document.getElementById("cartTotal");
+      if (totalElem) totalElem.textContent = "0";
     });
 
-    // keyboard handling: ESC closes modal, Enter triggers proceed when modal open
-    document.addEventListener('keydown', (ev) => {
-      if (modalBackdrop.style.display === 'flex') {
-        if (ev.key === 'Escape') hideConfirmModal();
-        if (ev.key === 'Enter') {
-          ev.preventDefault();
-          modalProceed.click();
-        }
-      }
-    });
   </script>
 </body>
 </html>

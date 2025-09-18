@@ -1,446 +1,368 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Books & Movies — Banasthali Halloween Carnival</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="referrer" content="no-referrer" />
+  <title>Movies & Books - Halloween Carnival Banasthali</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Basic reset and layout */
-    :root{
-      --bg:#0f1720;
-      --card:#0b1220;
-      --muted:#9aa4b2;
-      --accent:#ff6a00;
-      --surface:#0f1724;
-      --success:#0bb07a;
-      --danger:#ff4b4b;
-      --radius:10px;
-      --max-width:1100px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:linear-gradient(180deg,var(--bg),#071019 120%);
-      color:#e6eef6;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
-      padding-bottom:40px;
+    :root {
+      --bg: #0d0d0d;
+      --card: #151515;
+      --panel: #1a1a1a;
+      --text: #fff;
+      --accent: #ff6a00;     
+      --box-shadow-color: #ff6a00;  
     }
 
-    header{
-      background:linear-gradient(90deg, rgba(255,106,0,0.12), rgba(255,106,0,0.06));
-      padding:18px 20px;
-      border-bottom:1px solid rgba(255,255,255,0.03);
-    }
-    .nav {
-      max-width:var(--max-width);
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .brand { display:flex; gap:12px; align-items:center; }
-    .brand .logo {
-      width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ff9a3a);
-      display:flex;align-items:center;justify-content:center;font-weight:800;color:#081019;
-      box-shadow:0 6px 20px rgba(255,106,0,0.12);
-    }
-    .brand h1{margin:0;font-size:18px;letter-spacing:0.2px}
-    nav.links{display:flex;gap:14px;align-items:center}
-    nav.links a { color:#dbe9ff; text-decoration:none; font-weight:600; font-size:14px; opacity:0.92 }
-    nav.links a:hover{opacity:1;text-decoration:underline}
-
-    main.container{
-      max-width:var(--max-width);
-      margin:28px auto;
-      padding:0 20px;
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:20px;
-      align-items:start;
+    /* Hero/banner image at the top */
+    .page-hero {
+        height: 25vh;
+        background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url('hauntedhouse.jpeg');
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+        position: relative;
+        background-position: center;
     }
 
-    .panel{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.03);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow: 0 6px 30px rgba(3,8,15,0.6);
+    .page-hero h2 {
+        margin: 0;
+        color: var(--accent);
+        font-size: 1.6rem;
+        text-shadow: 0 4px 16px rgba(0,0,0,0.6);
+        z-index: 1;
     }
 
-    .catalog h2, .sidebar h3 { margin:0 0 12px 0; color:var(--accent) }
-
-    .item {
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 8px;
-      border-radius:8px;
-      transition:background .18s, transform .12s;
-      align-items:center;
-      border:1px solid transparent;
+    body {
+        margin: 0;
+        font-family: "Trebuchet MS", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background: var(--bg);
+        color: var(--text);
     }
-    .item + .item { margin-top:10px; }
-    .item:hover { background:rgba(255,255,255,0.02); transform:translateY(-2px); border-color:rgba(255,255,255,0.02) }
 
-    .item .meta { display:flex; flex-direction:column; gap:4px }
-    .item .meta .title { font-weight:700; font-size:15px; color:#fff }
-    .item .meta .desc { color:var(--muted); font-size:13px }
-
-    .item .actions { display:flex; gap:8px; align-items:center }
-    .btn {
-      border:0; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px;
-      background:var(--accent); color:#081019;
-      box-shadow: 0 6px 18px rgba(255,106,0,0.08);
+    h2, h3 {
+        font-family: inherit;
     }
-    .btn.ghost { background:transparent; color:#dbe9ff; border:1px solid rgba(255,255,255,0.04) }
-    .btn.small{ padding:6px 10px; font-size:13px }
 
-    .sidebar .block { margin-bottom:12px }
-    .price { font-weight:800; color:#fff; font-size:14px }
-
-    /* Modal */
-    .modal-backdrop{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1200; background:rgba(3,8,15,0.6); padding:20px }
-    .modal {
-      width:100%; max-width:480px;
-      background:linear-gradient(180deg,#07121a,#0b1a25);
-      border-radius:12px; padding:18px; border:1px solid rgba(255,255,255,0.04);
-      box-shadow:0 20px 60px rgba(3,8,15,0.8);
+    /* Header nav */
+    header {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        background: rgba(17,17,17,0.5);
+        backdrop-filter: blur(8px);
+        border-radius: 12px;
+        box-shadow: 0 0 15px var(--box-shadow-color);
+        z-index: 10;
+        width: fit-content;
     }
-    .modal h3 { margin:0 0 8px 0; color:var(--accent) }
-    .form-row { margin-top:10px; display:flex; gap:8px; flex-direction:column }
-    label { color:var(--muted); font-size:13px; margin-bottom:6px; display:block }
-    input[type="text"], input[type="tel"] {
-      width:100%; padding:10px 12px; border-radius:8px; background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.03); color:#eaf4ff; font-size:14px;
+
+    header nav {
+        display: flex;
+        gap: 10px;
     }
-    .modal .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px }
-    .modal .actions .btn.secondary { background:#0b1220; color:#dbe9ff; border:1px solid rgba(255,255,255,0.04) }
 
-    .error { color:var(--danger); font-size:13px; margin-top:8px; display:none }
-
-    /* Confirmation area (inline) */
-    .confirmation {
-      margin-top:18px;
-      padding:14px;
-      border-radius:10px;
-      background:linear-gradient(90deg, rgba(11,26,32,0.6), rgba(4,9,14,0.4));
-      border:1px solid rgba(255,255,255,0.02);
-      display:none;
+    header nav a {
+        margin-left: 10px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease, transform 0.2s ease;
     }
-    .confirmation .title { color:var(--success); font-weight:800; margin:0 0 8px 0; font-size:16px }
-    .confirmation p { margin:6px 0; color:#e6eef6 }
-    .confirmation .small { color:var(--muted); font-size:13px }
 
-    footer { max-width:var(--max-width); margin:28px auto 0; padding:8px 20px; color:var(--muted); font-size:13px; text-align:center }
-
-    @media (max-width:900px) {
-      main.container { grid-template-columns:1fr; padding:12px }
-      .sidebar { order:2 }
+    header nav a:hover {
+        color: var(--accent);
+        transform: scale(1.05);
     }
+
+    /* Panels and sections */
+    section {
+      background: var(--panel);
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 900px;
+      box-shadow: 0 0 25px var(--accent);
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    section h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-align: center;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    /* Movie list */
+    .movie-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .movie-card {
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .movie-card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 0 20px var(--accent); 
+        transition: transform 0.2s, box-shadow 0.2s; 
+    }
+
+    .movie-card img:hover {
+        transform: scale(1.02);              
+        box-shadow: 0 0 30px var(--accent);   
+    }
+
+    .movie-card h3 {
+      margin: 0.5rem 0;
+      color: var(--accent);
+    }
+
+    /* Labels below images */
+    .movie-labels,
+    .book-labels {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .movie-card, .book-card {
+        background: var(--panel) !important;
+    }
+
+    .label-orange {
+      background: var(--accent);
+      color: #000000;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    /* Book list */
+    .book-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .book-card {
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .book-card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 0 20px var(--accent); 
+        transition: transform 0.2s, box-shadow 0.2s; 
+    }
+
+    .book-card img:hover {
+        transform: scale(1.02);              
+        box-shadow: 0 0 30px var(--accent);   
+    }
+
+    .book-card h3 {
+      margin: 0.5rem 0;
+      color: var(--accent);
+    }
+
+    .book-card button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .book-card button:hover {
+      background: var(--text);
+      color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+        color: red;
+        background: #111;
+        text-align: center;
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    section:nth-of-type(odd) {
+        background: rgba(26, 26, 26, 0.95); /* slightly darker */
+        box-shadow: 0 0 25px var(--accent);
+    }
+
+    section:nth-of-type(even) {
+        background: rgba(21, 21, 21, 0.95); /* slightly lighter */
+        box-shadow: 0 0 25px var(--accent);
+    }
+
   </style>
 </head>
 <body>
-  <header>
-    <div class="nav" role="navigation" aria-label="Main navigation">
-      <div class="brand" role="img" aria-label="Banasthali Carnival">
-        <div class="logo" aria-hidden="true">BH</div>
-        <div>
-          <h1>Banasthali Halloween Carnival</h1>
-          <div style="color:var(--muted);font-size:13px;margin-top:4px">Books & Movies · Reserve / Book</div>
-        </div>
-      </div>
 
-      <nav class="links" aria-label="Site links">
-        <a href="index.html">Home</a>
-        <a href="tickets.html">Tickets</a>
-        <a href="merch.html">Merch</a>
-      </nav>
-    </div>
+    <!-- Page Heading -->
+    <h1 style="
+        text-align: center;
+        color: #ff6a00;
+        text-shadow: 2px 2px 8px #000;
+        margin: 5rem 0 0.5rem 0;
+        font-family: 'Trebuchet MS', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    ">
+        Movie Screening and Book Fair ☠️
+    </h1>
+
+    <!-- Page Description -->
+    <p style="
+        text-align: center;
+        color: #ffffffc5;
+        font-size: 1rem;
+        margin: 0 0 2rem 0;
+        font-family: 'Trebuchet MS', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    ">
+        Join us for classic horror films and spine-chilling books! Pre-book your tickets and dive into the world of terror.
+    </p>
+
+
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <a href="index.html">🎃 Home</a>
+      <a href="tickets.html">Tickets</a>
+      <a href="merch.html">Merch</a>
+    </nav>
   </header>
 
-  <main class="container" role="main">
-    <!-- Catalog -->
-    <section class="panel catalog" aria-labelledby="catalogTitle">
-      <h2 id="catalogTitle">Available — Reserve & Book</h2>
-
-      <div class="item" data-item-id="book-gothic" data-item-type="book" data-item-title="Collected Gothic Tales">
-        <div class="meta">
-          <div class="title">Collected Gothic Tales</div>
-          <div class="desc">Stall A3 — curated gothic short stories</div>
-        </div>
-        <div class="actions">
-          <button class="btn small open-booking" data-action="reserve">Reserve Copy</button>
+  <!-- Movies Section -->
+  <section>
+    <h2>🎬 Horror Movie Screenings</h2>
+    <div class="movie-list">
+      <div class="movie-card fade-in">
+        <img src="exorcist.jpg" alt="The Exorcist Poster">
+        <h3>The Exorcist</h3>
+        <div class="movie-labels">
+          <span class="label-orange">Oct 28 – 7:00 PM</span>
+          <span class="label-orange">₹200</span>
         </div>
       </div>
-
-      <div class="item" data-item-id="book-dracula" data-item-type="book" data-item-title="Horror Classics: Dracula & More">
-        <div class="meta">
-          <div class="title">Horror Classics: Dracula & More</div>
-          <div class="desc">Stall B1 — new editions and translations</div>
-        </div>
-        <div class="actions">
-          <button class="btn small open-booking" data-action="reserve">Reserve Copy</button>
+      <div class="movie-card fade-in">
+        <img src="halloween.jpg" alt="Halloween Poster">
+        <h3>Halloween (1978)</h3>
+        <div class="movie-labels">
+          <span class="label-orange">Oct 29 – 9:30 PM</span>
+          <span class="label-orange">₹250</span>
         </div>
       </div>
-
-      <div class="item" data-item-id="event-local" data-item-type="event" data-item-title="Local Authors — Spooky Shortlists">
-        <div class="meta">
-          <div class="title">Local Authors — Spooky Shortlists (Event seat)</div>
-          <div class="desc">Meet & greet — limited seats</div>
-        </div>
-        <div class="actions">
-          <button class="btn small open-booking" data-action="bookseat">Book Seat</button>
+      <div class="movie-card fade-in">
+        <img src="shining.jpg" alt="The Shining Poster">
+        <h3>The Shining</h3>
+        <div class="movie-labels">
+          <span class="label-orange">Oct 30 – 8:00 PM</span>
+          <span class="label-orange">₹220</span>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div style="height:12px"></div>
-
-      <div class="confirmation" id="confirmation" role="status" aria-live="polite">
-        <div class="title" id="confirmTitle">Booking confirmed</div>
-        <p id="confirmMessage">Your ticket is booked. Please collect it from the counter.</p>
-        <p class="small" id="confirmDetails" aria-hidden="false"></p>
-      </div>
-    </section>
-
-    <!-- Sidebar: movie nights, info -->
-    <aside class="panel sidebar" aria-labelledby="sidebarTitle">
-      <h3 id="sidebarTitle">Outdoor Movie Nights</h3>
-
-      <div class="block">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div style="font-weight:800">30 Oct — Dracula</div>
-            <div class="small">8 PM — Free seating</div>
-          </div>
-          <div>
-            <button class="btn small open-booking" data-action="bookmovie" data-item-title="Dracula">Book</button>
-          </div>
+  <!-- Books Section -->
+  <section>
+    <h2>📚 Horror Book Fair</h2>
+    <div class="book-list">
+      <div class="book-card fade-in">
+        <img src="dracula.jpg" alt="Dracula Book Cover">
+        <h3>Dracula</h3>
+        <div class="book-labels">
+          <span class="label-orange">Bram Stoker</span>
+          <span class="label-orange">₹299</span>
         </div>
+        <button>Pre-Book</button>
       </div>
-
-      <div class="block">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div style="font-weight:800">31 Oct — Short Horror Films</div>
-            <div class="small">9 PM — Short film block</div>
-          </div>
-          <div>
-            <button class="btn small open-booking" data-action="bookmovie" data-item-title="Classic Horror Short Films">Book</button>
-          </div>
+      <div class="book-card fade-in">
+        <img src="frankenstein.jpg" alt="Frankenstein Book Cover">
+        <h3>Frankenstein</h3>
+        <div class="book-labels">
+          <span class="label-orange">Mary Shelley</span>
+          <span class="label-orange">₹249</span>
         </div>
+        <button>Pre-Book</button>
       </div>
+      <div class="book-card fade-in">
+        <img src="hillhouse.jpg" alt="The Haunting of Hill House Book Cover">
+        <h3>The Haunting of Hill House</h3>
+        <div class="book-labels">
+          <span class="label-orange">Shirley Jackson</span>
+          <span class="label-orange">₹279</span>
+        </div>
+        <button>Pre-Book</button>
+      </div>
+    </div>
+  </section>
 
-      <hr style="border:none;border-top:1px solid rgba(255,255,255,0.02);margin:12px 0">
-
-      <div class="small">Vendor bookings are handled by the carnival committee. For vendor enquiries please contact: <strong style="color:var(--accent)">books@banasthali-carnival.com</strong></div>
-    </aside>
-  </main>
-
-  <footer>
+  <footer class="site-footer">
     &copy; 2025 Banasthali Halloween Carnival | All Rights Reserved
   </footer>
 
-  <!-- Modal (Name + Mobile only) -->
-  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal" role="document" aria-describedby="modalDesc">
-      <h3 id="modalTitle">Confirm booking</h3>
-      <div id="modalDesc" class="small" style="margin-bottom:8px;color:var(--muted)">Please enter your name and mobile number to confirm.</div>
-
-      <form id="bookingForm" novalidate>
-        <input type="hidden" id="formItemId" name="itemId" value="">
-        <input type="hidden" id="formItemType" name="itemType" value="">
-        <input type="hidden" id="formItemTitle" name="itemTitle" value="">
-        <div class="form-row">
-          <label for="custName">Full name</label>
-          <input id="custName" name="name" type="text" autocomplete="name" inputmode="text" placeholder="Jane Doe" required>
-        </div>
-
-        <div class="form-row">
-          <label for="custMobile">Mobile number</label>
-          <input id="custMobile" name="mobile" type="tel" inputmode="tel" placeholder="+91 98765 43210" pattern="[\d\+\-\s]+" required>
-        </div>
-
-        <div class="error" id="modalError" role="alert" aria-live="assertive"></div>
-
-        <div class="actions" style="margin-top:12px">
-          <button type="button" class="btn ghost secondary" id="btnCancel">Cancel</button>
-          <button type="submit" class="btn" id="btnConfirm">Confirm booking</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <script>
-    (function(){
-      'use strict';
+    const faders = document.querySelectorAll('.fade-in');
 
-      // Keep DOM references
-      const modalBackdrop = document.getElementById('modalBackdrop');
-      const bookingForm = document.getElementById('bookingForm');
-      const btnCancel = document.getElementById('btnCancel');
-      const btnConfirm = document.getElementById('btnConfirm');
-      const modalError = document.getElementById('modalError');
+    const appearOptions = {
+        threshold: 0.1
+    };
 
-      const formItemId = document.getElementById('formItemId');
-      const formItemType = document.getElementById('formItemType');
-      const formItemTitle = document.getElementById('formItemTitle');
-      const custName = document.getElementById('custName');
-      const custMobile = document.getElementById('custMobile');
-
-      const confirmation = document.getElementById('confirmation');
-      const confirmTitle = document.getElementById('confirmTitle');
-      const confirmMessage = document.getElementById('confirmMessage');
-      const confirmDetails = document.getElementById('confirmDetails');
-
-      // Utility: simple order id
-      function generateOrderId(prefix){
-        const t = Date.now().toString(36);
-        const r = Math.floor(Math.random()*900 + 100).toString(36);
-        return (prefix || 'ORD') + '-' + t + '-' + r;
-      }
-
-      // Open modal with item meta
-      function openModalFor(element) {
-        const el = element.closest('.item, .block') || element;
-        const itemId = el && el.dataset && (el.dataset.itemId || '') || '';
-        const itemType = el && el.dataset && (el.dataset.itemType || '') || '';
-        const itemTitle = el && el.dataset && (el.dataset.itemTitle || element.getAttribute('data-item-title') || '') || '';
-
-        formItemId.value = itemId;
-        formItemType.value = itemType;
-        formItemTitle.value = itemTitle || element.getAttribute('data-item-title') || '';
-
-        modalError.style.display = 'none';
-        custName.value = '';
-        custMobile.value = '';
-
-        // show modal
-        modalBackdrop.style.display = 'flex';
-        modalBackdrop.setAttribute('aria-hidden', 'false');
-        custName.focus();
-      }
-
-      // Close modal
-      function closeModal() {
-        modalBackdrop.style.display = 'none';
-        modalBackdrop.setAttribute('aria-hidden', 'true');
-        modalError.style.display = 'none';
-      }
-
-      // Basic mobile cleaning
-      function normalizeMobile(v){
-        return (v || '').replace(/[^\d\+]/g,'').trim();
-      }
-
-      // Add event listeners to open buttons
-      Array.prototype.slice.call(document.querySelectorAll('.open-booking')).forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          openModalFor(btn);
+    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
         });
-      });
+        }, appearOptions);
 
-      // cancel
-      btnCancel.addEventListener('click', closeModal);
+        faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+    });
 
-      // close modal on backdrop click
-      modalBackdrop.addEventListener('click', function(e){
-        if (e.target === modalBackdrop) closeModal();
-      });
-
-      // Escape closes modal
-      document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape' && modalBackdrop.style.display === 'flex') closeModal();
-      });
-
-      // Submit handler
-      bookingForm.addEventListener('submit', function(e){
-        e.preventDefault();
-        modalError.style.display = 'none';
-        modalError.textContent = '';
-
-        const name = (custName.value || '').trim();
-        const mobileRaw = (custMobile.value || '').trim();
-        const mobile = normalizeMobile(mobileRaw);
-        const itemTitle = (formItemTitle.value || '').trim();
-
-        if (!name) {
-          modalError.textContent = 'Please enter your name.';
-          modalError.style.display = '';
-          custName.focus();
-          return;
-        }
-        if (!mobile || mobile.length < 7) {
-          modalError.textContent = 'Please enter a valid mobile number.';
-          modalError.style.display = '';
-          custMobile.focus();
-          return;
-        }
-
-        // Build booking record (client-side only)
-        const orderId = generateOrderId(itemTitle ? itemTitle.substring(0,3).toUpperCase() : 'BK');
-        const issuedAt = new Date().toISOString();
-
-        const booking = {
-          orderId: orderId,
-          itemTitle: itemTitle || 'Ticket',
-          name: name,
-          mobile: mobile,
-          issuedAt: issuedAt
-        };
-
-        // Render simple confirmation inline (no popups)
-        renderConfirmation(booking);
-
-        // Close modal
-        closeModal();
-
-        // Optionally: here you can POST to a server / save to local JSON via your Node server.
-        // Example: fetch('/save-booking', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(booking) })
-      });
-
-      // Render confirmation block
-      function renderConfirmation(booking){
-        confirmTitle.textContent = 'Booking confirmed';
-        confirmMessage.textContent = 'Your ticket is booked. Please collect it from the counter.';
-        confirmDetails.innerHTML = `
-          <strong>Order ID: </strong>${escapeHtml(booking.orderId)}<br>
-          <strong>Item: </strong>${escapeHtml(booking.itemTitle)}<br>
-          <strong>Name: </strong>${escapeHtml(booking.name)}<br>
-          <strong>Mobile: </strong>${escapeHtml(booking.mobile)}<br>
-          <span class="small">Issued: ${new Date(booking.issuedAt).toLocaleString()}</span>
-        `;
-        confirmation.style.display = 'block';
-        // accessible focus
-        confirmation.setAttribute('tabindex','-1');
-        confirmation.focus();
-      }
-
-      // Simple HTML escape
-      function escapeHtml(s){
-        if (!s) return '';
-        return String(s).replace(/[&<>"']/g, function(m){
-          return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m];
-        });
-      }
-
-      // Basic mobile input formatting for nicer UX (not required for validation)
-      custMobile.addEventListener('input', function(){
-        // Allow + and digits and spaces for readability, remove other chars
-        let v = custMobile.value;
-        v = v.replace(/[^\d\+\s\-]/g,'');
-        // collapse multiple spaces
-        v = v.replace(/\s{2,}/g,' ');
-        custMobile.value = v;
-      });
-
-    })();
   </script>
+
 </body>
 </html>
